@@ -25,4 +25,18 @@ public class PostController {
         return postService.createPost(requestDto);
     }
 
+    @GetMapping("/posts/{id}")
+    public PostResponseDto getPostById(@PathVariable Long id){
+        return postService.getPostById(id);
+    }
+
+    @PutMapping("/posts/{id}")
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestParam String password,@RequestBody PostRequestDto postRequestDto){
+        return postService.updatePost(id,password,postRequestDto);
+    }
+    @DeleteMapping("/posts/{id}")
+    public String deletePost(@PathVariable Long id){
+        String returnMessage=postService.deletePost(id);
+        return returnMessage;
+    }
 }
