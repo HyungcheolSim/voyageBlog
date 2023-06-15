@@ -2,7 +2,6 @@ package com.sparta.voyageblog.entity;
 
 import com.sparta.voyageblog.dto.PostRequestDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
