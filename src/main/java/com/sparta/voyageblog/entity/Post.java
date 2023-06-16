@@ -1,6 +1,7 @@
 package com.sparta.voyageblog.entity;
 
 import com.sparta.voyageblog.dto.PostRequestDto;
+import com.sparta.voyageblog.dto.PostUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,10 +33,9 @@ public class Post extends Timestamped{
         this.contents=requestDto.getContents();
     }
 
-    public void update(PostRequestDto requestDto) {
+    public void update(PostUpdateRequestDto requestDto) {
         this.title=requestDto.getTitle();
         this.writer=requestDto.getWriter();
-        this.password=requestDto.getPassword();
         this.contents=requestDto.getContents();
     }
 }

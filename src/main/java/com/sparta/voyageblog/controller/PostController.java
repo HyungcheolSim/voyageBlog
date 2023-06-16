@@ -2,6 +2,7 @@ package com.sparta.voyageblog.controller;
 
 import com.sparta.voyageblog.dto.PostRequestDto;
 import com.sparta.voyageblog.dto.PostResponseDto;
+import com.sparta.voyageblog.dto.PostUpdateRequestDto;
 import com.sparta.voyageblog.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,13 +31,17 @@ public class PostController {
         return postService.getPostById(id);
     }
 
-    @PutMapping("/posts/{id}")
-    public PostResponseDto updatePost(@PathVariable Long id, @RequestParam String password,@RequestBody PostRequestDto postRequestDto){
-        return postService.updatePost(id,password,postRequestDto);
+//    @PutMapping("/posts/{id}")
+//    public PostResponseDto updatePost(@PathVariable Long id, @RequestParam String password,@RequestBody PostRequestDto postRequestDto){
+//        return postService.updatePost(id,password,postRequestDto);
+//    }
+    @PutMapping("/posts")
+    public PostResponseDto updatePost(@RequestBody PostUpdateRequestDto updateRequestDto){
+        return postService.updatePost(updateRequestDto);
     }
     @DeleteMapping("/posts/{id}")
     public String deletePost(@PathVariable Long id){
         String returnMessage=postService.deletePost(id);
-        return returnMessage;
+        return "success : "+returnMessage;
     }
 }
