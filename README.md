@@ -40,3 +40,35 @@ https://boundless-pudding-4e9.notion.site/189b7be021e5442993234dcbb0d185e3?pvs=4
 
 
 ---------------
+
+# 필수질문 답변
+
+
+1. 수정, 삭제 API의 request를 어떤 방식으로 사용하셨나요? (param, query, body)
+    
+    수정 - body
+    
+    삭제 - query+body
+
+   **어떤 resource를 식별하고 싶으면 Path Variable**를, **정렬이나 필터링을 한다면 Query Parameter**를 사용하는 것이 좋다.
+   비밀번호를 path에 들어나지 않게 하기 위해 body로 전달했다.
+    
+3. 어떤 상황에 어떤 방식의 request를 써야하나요?
+    생성 : CREATE
+    수정 : PUT
+    부분 수정: PATCH
+    삭제 : DELETE
+    조회 : GET
+   
+    
+5. RESTful한 API를 설계했나요? 어떤 부분이 그런가요? 어떤 부분이 그렇지 않나요?
+    
+    최대한 지키려고 했습니다. 부족한 점이 있다면 수정하겠습니다.
+    
+6. 적절한 관심사 분리를 적용하였나요? (Controller, Repository, Service)
+    
+    그렇습니다.
+    
+7. API 명세서 작성 가이드라인을 검색하여 직접 작성한 API 명세서와 비교해보세요!
+    
+    비슷한 것 같습니다.
