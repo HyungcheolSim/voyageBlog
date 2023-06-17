@@ -1,8 +1,10 @@
 # voyageBlog
 spring 개인과제 나만의 블로그 만들기
 
-프로젝트 설명& API 명세서 & 실행화면... : https://boundless-pudding-4e9.notion.site/189b7be021e5442993234dcbb0d185e3?pvs=4
+프로젝트 설명& API 명세서 & 실행화면... 
 --------------------
+https://boundless-pudding-4e9.notion.site/189b7be021e5442993234dcbb0d185e3?pvs=4
+
 
 **과제 요구사항**
 
