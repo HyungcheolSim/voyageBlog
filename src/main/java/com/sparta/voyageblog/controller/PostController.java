@@ -31,17 +31,12 @@ public class PostController {
         return postService.getPostById(id);
     }
 
-//    @PutMapping("/posts/{id}")
-//    public PostResponseDto updatePost(@PathVariable Long id, @RequestParam String password,@RequestBody PostRequestDto postRequestDto){
-//        return postService.updatePost(id,password,postRequestDto);
-//    }
     @PutMapping("/posts")
     public PostResponseDto updatePost(@RequestBody PostUpdateRequestDto updateRequestDto){
         return postService.updatePost(updateRequestDto);
     }
     @DeleteMapping("/posts/{id}")
-    public String deletePost(@PathVariable Long id){
-        String returnMessage=postService.deletePost(id);
-        return "success : "+returnMessage;
+    public PostResponseDto deletePost(@PathVariable Long id,@RequestBody PostRequestDto postRequestDto){
+        return new PostResponseDto(postService.deletePost(id,postRequestDto.getPassword()));
     }
 }

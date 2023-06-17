@@ -45,13 +45,19 @@ public class PostService {
         if(checkPassword(post.getPassword(),requestDto.getPassword())){//비밀번호 확인되면
             post.update(requestDto); //dirty check 로 update 된다.
         }
-        return new PostResponseDto(findPost(requestDto.getId())); //다시 불러와서 조회
+        //return new PostResponseDto(findPost(requestDto.getId())); //다시 불러와서 조회
+        return new PostResponseDto(post);
     }
     @Transactional
-    public String deletePost(Long id) {
-        Post post=findPost(id);
-        postRepository.delete(post);
-        return "true";
+    public Boolean deletePost(Long id,String password) {
+
+        Post post = findPost(id);
+        if (checkPassword(password, post.getPassword())){
+            postRepository.delete(post);
+            return true;
+        }else {
+            return false;
+        }
     }
 
     //private methods Service 내에서만 사용되는 메서드!
