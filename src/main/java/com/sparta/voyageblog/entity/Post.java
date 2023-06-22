@@ -15,27 +15,25 @@ import lombok.Setter;
 public class Post extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="p_id")
     private Long id;
-    @Column(name="title",nullable = false)
+    @Column(name="p_title",nullable = false)
     private String title;
-    @Column(name="writer",nullable = false)
-    private String writer;
-    @Column(name="password",nullable = false)
-    private String password;
-    @Column(name="contents",nullable = false)
+    @Column(name="p_username",nullable = false)
+    private String username;
+    @Column(name="p_contents",nullable = false)
     private String contents;
 
 
     public Post(PostRequestDto requestDto){
         this.title=requestDto.getTitle();
-        this.writer=requestDto.getWriter();
-        this.password=requestDto.getPassword();
+        this.username=requestDto.getWriter();
         this.contents=requestDto.getContents();
     }
 
     public void update(PostUpdateRequestDto requestDto) {
         this.title=requestDto.getTitle();
-        this.writer=requestDto.getWriter();
+        this.username=requestDto.getWriter();
         this.contents=requestDto.getContents();
     }
 }
