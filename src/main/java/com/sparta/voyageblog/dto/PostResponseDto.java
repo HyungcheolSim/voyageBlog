@@ -14,16 +14,18 @@ public class PostResponseDto {
     private Boolean success;
     private Long id;
     private String title;
-    private String writer;
+    private String username;
     private String contents;
     private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
     public PostResponseDto(Post post){
         this.id=post.getId();
         this.title=post.getTitle();
-        this.writer=post.getWriter();
+        this.username=post.getUsername();
         this.contents=post.getContents();
         this.createdAt=post.getCreatedAt();
+        this.modifiedAt=post.getModifiedAt();
     }
 
     public PostResponseDto(boolean success) {

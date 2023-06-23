@@ -24,16 +24,19 @@ public class Post extends Timestamped{
     @Column(name="p_contents",nullable = false)
     private String contents;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="u_id",nullable = false)
+    private User user;
 
     public Post(PostRequestDto requestDto){
         this.title=requestDto.getTitle();
-        this.username=requestDto.getWriter();
+        this.username=requestDto.getUsername();
         this.contents=requestDto.getContents();
     }
 
     public void update(PostUpdateRequestDto requestDto) {
         this.title=requestDto.getTitle();
-        this.username=requestDto.getWriter();
+        this.username=requestDto.getUsername();
         this.contents=requestDto.getContents();
     }
 }

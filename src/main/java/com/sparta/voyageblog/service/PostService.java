@@ -42,22 +42,22 @@ public class PostService {
     public PostResponseDto updatePost(PostUpdateRequestDto requestDto) {
         Post post=findPost(requestDto.getId()); //존재찾기
 
-        if(checkPassword(post.getPassword(),requestDto.getPassword())){//비밀번호 확인되면
+        /*if(checkPassword(post.getPassword(),requestDto.getPassword())){//비밀번호 확인되면
             post.update(requestDto); //dirty check 로 update 된다.
-        }
+        }*/
         //return new PostResponseDto(findPost(requestDto.getId())); //다시 불러와서 조회
         return new PostResponseDto(post);
     }
     @Transactional
-    public Boolean deletePost(Long id,String password) {
-
+    public Boolean deletePost(Long id) {
         Post post = findPost(id);
-        if (checkPassword(password, post.getPassword())){
+        /*if (checkPassword(password, post.getPassword())){
             postRepository.delete(post);
             return true;
         }else {
             return false;
-        }
+        }*/
+        return true;
     }
 
     //private methods Service 내에서만 사용되는 메서드!
@@ -72,12 +72,5 @@ public class PostService {
                 new IllegalArgumentException("선택한 게시글은 존재하지 않습니다.")
         );
     }
-    /*
-    {
-        "timestamp": "2023-06-16T02:59:25.823+00:00",
-        "status": 500,
-        "error": "Internal Server Error",
-        "path": "/api/posts/7"
-    }
-     */
+
 }
