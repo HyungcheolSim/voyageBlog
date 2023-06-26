@@ -32,6 +32,7 @@ public class JwtUtil {
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
+
     @PostConstruct
     public void init() {
         byte[] bytes = Base64.getDecoder().decode(secretKey);

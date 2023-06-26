@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,8 +22,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity // Spring Security 지원을 가능하게 함
 @RequiredArgsConstructor
+@EnableWebSecurity(debug = true) // Spring Security 지원을 가능하게 함 //실행되는 filter chain 을 확인할 수 있는 옵션 debug=true;
+@EnableMethodSecurity(securedEnabled = true) //@Secured 어노테이션 활성화
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
@@ -69,10 +71,14 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
+        /*
         http.formLogin((formLogin) ->
                 formLogin
                         .loginPage("/api/user/login-page").permitAll()
         );
+        */
+        //기존 form login 비활성화
+        http.formLogin(AbstractHttpConfigurer::disable);
 
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);

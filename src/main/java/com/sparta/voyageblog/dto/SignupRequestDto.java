@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignupRequestDto {
-    @NotBlank
     @Pattern(regexp = "^[A-Za-z0-9+]{4,10}")
+    @NotBlank
     private String username;
     @NotBlank
     @Pattern(regexp = "^[A-Za-z0-9+]{8,15}")

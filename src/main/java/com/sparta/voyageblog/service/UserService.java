@@ -1,5 +1,6 @@
 package com.sparta.voyageblog.service;
 
+import com.sparta.voyageblog.dto.LoginRequestDto;
 import com.sparta.voyageblog.dto.SignupRequestDto;
 import com.sparta.voyageblog.entity.User;
 import com.sparta.voyageblog.entity.UserRoleEnum;
@@ -7,6 +8,7 @@ import com.sparta.voyageblog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,6 +21,7 @@ public class UserService {
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
 
+    @Transactional
     public void signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
@@ -28,7 +31,7 @@ public class UserService {
         if (checkUsername.isPresent()) {
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
-
+        String email=requestDto.getEmail();
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (requestDto.isAdmin()) {
@@ -42,4 +45,5 @@ public class UserService {
         User user = new User(username, password, email, role);
         userRepository.save(user);
     }
+
 }

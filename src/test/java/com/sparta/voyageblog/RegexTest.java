@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-@DisplayName("정규표현식 테스트")
+@DisplayName("테스트")
 public class RegexTest {
 
     @Test
