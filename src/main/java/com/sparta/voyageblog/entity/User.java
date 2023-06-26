@@ -43,6 +43,7 @@ public class User {
         this.role=role;
     }
 
+    //후에 내가 작성한 게시글 목록들 보기?
     public void addPostList(Post post) {
         this.postList.add(post);
         post.setUser(this); //외래키 설정
