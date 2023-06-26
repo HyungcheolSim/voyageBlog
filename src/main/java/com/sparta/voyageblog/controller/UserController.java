@@ -39,46 +39,4 @@ public class UserController {
         userService.signup(signupRequestDto);
         return ResponseEntity.ok(new GeneralResponseDto("회원가입 완료", HttpStatus.OK));
     }
-
-
-
-    /*//로그인 페이지
-    @GetMapping("/user/login-page")
-    public String loginPage(){
-        return "login";
-    }
-
-    //회원가입 페이지
-    @GetMapping("/user/signup")
-    public String signupPage(){
-        return "signup";
-    }
-    */
-    /*@PostMapping("/user/signup")
-    public String signup(@Valid SignupRequestDto requestDto, BindingResult bindingResult) {
-        // Validation 예외처리
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        if(fieldErrors.size() > 0) {
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
-            }
-            return "redirect:/api/user/signup";
-        }
-
-        userService.signup(requestDto);
-
-        return "redirect:/api/user/login-page";
-    }
-*/
-/*    // 회원 관련 정보 받기
-    @GetMapping("/user-info")
-    @ResponseBody
-    public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String username = userDetails.getUser().getUsername();
-        UserRoleEnum role = userDetails.getUser().getRole();
-        boolean isAdmin = (role == UserRoleEnum.ADMIN);
-
-        return new UserInfoDto(username, isAdmin);
-    }*/
-
 }

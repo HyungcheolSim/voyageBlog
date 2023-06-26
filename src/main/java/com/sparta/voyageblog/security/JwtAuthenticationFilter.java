@@ -61,12 +61,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().write(objectMapper.writeValueAsString(dto));
     }
 
-
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         log.info("로그인 실패");
         response.setStatus(401);
-        //실패했을 때 전달할 수 있는 것들
+        GeneralResponseDto dto = new GeneralResponseDto("로그인 실패" , HttpStatus.UNAUTHORIZED);
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.getWriter().write(objectMapper.writeValueAsString(dto));
+        //return 401 unauthorized
     }
-
 }

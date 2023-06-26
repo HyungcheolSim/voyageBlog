@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostResponseDto {
-    private Boolean success;
     private Long id;
     private String title;
     private String username;
@@ -27,8 +26,5 @@ public class PostResponseDto {
         this.createdAt=post.getCreatedAt();
         this.modifiedAt=post.getModifiedAt();
     }
-
-    public PostResponseDto(boolean success) {
-        this.success=success;
-    }
+    
 }
