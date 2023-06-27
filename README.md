@@ -5,70 +5,124 @@ spring 개인과제 나만의 블로그 만들기
 --------------------
 https://boundless-pudding-4e9.notion.site/189b7be021e5442993234dcbb0d185e3?pvs=4
 
-
-**과제 요구사항**
-
-1. Entity를 그대로 반환하지 말고, DTO에 담아서 반환해주세요!
-2. 과제에는 여러분들이 서버 로직에 더 집중하실 수 있도록 JSON을 반환하는 API형태로 진행하려고 합니다.
-3. Postman 활용
-
 ----------------------
 
-**API 요구사항**
+## API 명세서
+링크
 
-1. 아래의 요구사항을 기반으로 Use Case 그려보기
-    - 손으로 그려도 됩니다.
+<details>
+<summary>최종 UML</summary>
+<div markdown="1">
+    <img src="https://i.postimg.cc/rpbDGqqQ/voyage-Blog-usecase-Diagram-lv3.png" height="700">
+</div>
+</details>
+<details>
+<summary>최종 ERD</summary>
+<div markdown="2">
 
-2. 전체 게시글 목록 조회 API
-    - 제목, 작성자명, 작성 내용, 작성 날짜를 조회하기
-    - 작성 날짜 기준 내림차순으로 정렬하기
-      
-3. 게시글 작성 API 
-    - 제목, 작성자명, 비밀번호, 작성 내용을 저장하고
-    - 저장된 게시글을 Client 로 반환하기
-      
-4. 선택한 게시글 조회 API 
-    - 선택한 게시글의 제목, 작성자명, 작성 날짜, 작성 내용을 조회하기 
+<img src="https://i.postimg.cc/tTShrbJY/erd-springblog-lv3.png" height="700">
 
-5. 선택한 게시글 수정 API
-    - 수정을 요청할 때 수정할 데이터와 비밀번호를 같이 보내서 서버에서 비밀번호 일치 여부를 확인 한 후
-    - 제목, 작성자명, 작성 내용을 수정하고 수정된 게시글을 Client 로 반환하기
-      
-6. 선택한 게시글 삭제 API
-    - 삭제를 요청할 때 비밀번호를 같이 보내서 서버에서 비밀번호 일치 여부를 확인 한 후
-    - 선택한 게시글을 삭제하고 Client 로 성공했다는 표시 반환하기
+</div>
+</details>
+<details>
+<summary>최종 DDL ->현재 스키마 일치하지 않는데, 구현 완료 후 다시 DDL 뽑아서 수정할 예정</summary>
+<div markdown="2">
+
+```
+
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+-- -----------------------------------------------------
+-- Schema post
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema post
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `post` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `post`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `post`.`user` (
+  `u_id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) NOT NULL,
+  `u_password` VARCHAR(255) NOT NULL,
+  `role` ENUM('ADMIN', 'USER') NOT NULL,
+  `u_username` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`u_id`),
+  UNIQUE INDEX `UK_ob8kqyqqgmefl0aco34akdtpe` (`email` ASC) VISIBLE,
+  UNIQUE INDEX `UK_3oypjjd5orxmgq581pe1rj5q2` (`u_username` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
----------------
+-- -----------------------------------------------------
+-- Table `post`.`post`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `post`.`post` (
+  `p_id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `created_at` DATETIME(6) NULL DEFAULT NULL,
+  `modified_at` DATETIME(6) NULL DEFAULT NULL,
+  `p_contents` VARCHAR(255) NOT NULL,
+  `p_title` VARCHAR(255) NOT NULL,
+  `p_username` VARCHAR(255) NOT NULL,
+  `u_id` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`p_id`),
+  INDEX `FKfvid82cuoi8ffelpry6l2cgxb` (`u_id` ASC) VISIBLE,
+  CONSTRAINT `FKfvid82cuoi8ffelpry6l2cgxb`
+    FOREIGN KEY (`u_id`)
+    REFERENCES `post`.`user` (`u_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 9
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
-# 필수질문 답변
 
+-- -----------------------------------------------------
+-- Table `mydb`.`comment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`comment` (
+  `c_id` BIGINT(20) NOT NULL,
+  `c_contents` VARCHAR(255) NULL,
+  `user_u_id` BIGINT(20) NOT NULL,
+  `post_p_id` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`c_id`, `post_p_id`),
+  INDEX `fk_comment_user_idx` (`user_u_id` ASC) VISIBLE,
+  INDEX `fk_comment_post1_idx` (`post_p_id` ASC) VISIBLE,
+  CONSTRAINT `fk_comment_user`
+    FOREIGN KEY (`user_u_id`)
+    REFERENCES `post`.`user` (`u_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_comment_post1`
+    FOREIGN KEY (`post_p_id`)
+    REFERENCES `post`.`post` (`p_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
-1. 수정, 삭제 API의 request를 어떤 방식으로 사용하셨나요? (param, query, body)
-    
-    수정 - body
-    
-    삭제 - query+body
+USE `post` ;
 
-   **어떤 resource를 식별하고 싶으면 Path Variable**를, **정렬이나 필터링을 한다면 Query Parameter**를 사용하는 것이 좋다.
-   비밀번호를 path에 들어나지 않게 하기 위해 body로 전달했다.
-    
-3. 어떤 상황에 어떤 방식의 request를 써야하나요?
-    생성 : CREATE
-    수정 : PUT
-    부분 수정: PATCH
-    삭제 : DELETE
-    조회 : GET
-   
-    
-5. RESTful한 API를 설계했나요? 어떤 부분이 그런가요? 어떤 부분이 그렇지 않나요?
-    
-    최대한 지키려고 했습니다. 부족한 점이 있다면 수정하겠습니다.
-    
-6. 적절한 관심사 분리를 적용하였나요? (Controller, Repository, Service)
-    
-    그렇습니다.
-    
-7. API 명세서 작성 가이드라인을 검색하여 직접 작성한 API 명세서와 비교해보세요!
-    
-    비슷한 것 같습니다.
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+```
+
+</div>
+</details>
