@@ -33,6 +33,7 @@ public class Post extends Timestamped{
         this.username=user.getUsername();
         this.contents=requestDto.getContents();
         this.user=user;
+        user.getPostList().add(this); //양방향 연관관계 처리
     }
 
     public void updatePost(PostUpdateRequestDto requestDto) {

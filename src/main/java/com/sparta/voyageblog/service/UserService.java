@@ -1,6 +1,5 @@
 package com.sparta.voyageblog.service;
 
-import com.sparta.voyageblog.dto.LoginRequestDto;
 import com.sparta.voyageblog.dto.SignupRequestDto;
 import com.sparta.voyageblog.entity.User;
 import com.sparta.voyageblog.entity.UserRoleEnum;

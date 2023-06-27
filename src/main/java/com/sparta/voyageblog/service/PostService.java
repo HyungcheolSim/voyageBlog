@@ -26,7 +26,14 @@ public class PostService {
 
     //Post 생성
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
-        return new PostResponseDto(postRepository.save(new Post(requestDto, user)));
+        //양방향일 때
+    /*
+        Post post=new Post(requestDto, user);
+        user.addPostList(post);
+        return new PostResponseDto(postRepository.save(post));
+    */
+        // 단방향일 때
+        return new PostResponseDto(postRepository.save(new Post(requestDto,user)));
     }
 
     //특정 id의 post 조회

@@ -26,10 +26,10 @@ public class User {
     @Column(name = "u_password", nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name="u_email", nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name="u_role", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
@@ -43,9 +43,4 @@ public class User {
         this.role=role;
     }
 
-    //후에 내가 작성한 게시글 목록들 보기?
-    public void addPostList(Post post) {
-        this.postList.add(post);
-        post.setUser(this); //외래키 설정
-    }
 }

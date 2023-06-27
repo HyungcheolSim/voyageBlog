@@ -10,9 +10,7 @@ import org.springframework.http.HttpStatus;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class GeneralResponseDto {
     private String message;
     private HttpStatus statusCode;
-
 }
