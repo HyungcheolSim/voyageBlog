@@ -24,7 +24,8 @@ public class Post extends Timestamped{
     @Column(name="p_contents",nullable = false)
     private String contents;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    //default @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name="u_id",nullable = false)
     private User user;
 
@@ -33,7 +34,7 @@ public class Post extends Timestamped{
         this.username=user.getUsername();
         this.contents=requestDto.getContents();
         this.user=user;
-        user.getPostList().add(this); //양방향 연관관계 처리
+        //user.getPostList().add(this); //양방향 연관관계 처리
     }
 
     public void updatePost(PostUpdateRequestDto requestDto) {

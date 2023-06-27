@@ -32,9 +32,10 @@ public class User {
     @Column(name="u_role", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
-
-    @OneToMany(mappedBy = "user")
-    private List<Post> postList =new ArrayList<>();
+    //양방향 매핑은 user가 작성한 게시글 목록 보기같은 기능이 필요하면 구현하겠다.
+    // User 쪽에서는 Post를 조회하지 않는 것으로 설정.
+    //@OneToMany(mappedBy = "user")
+    //private List<Post> postList =new ArrayList<>();
 
     public User(String username, String password, String email, UserRoleEnum role) {
         this.username=username;

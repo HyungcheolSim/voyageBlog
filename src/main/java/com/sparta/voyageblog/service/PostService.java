@@ -53,13 +53,13 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponseDto deletePost(Long id, String username) {
+    public void deletePost(Long id, String username) {
         Post post = findPost(id);
         if (!post.getUsername().equals(username)) {
             throw new IllegalArgumentException("회원님이 작성한 게시글이 아닙니다. 삭제할 수 없습니다.");
         }
         postRepository.delete(post);
-        return new PostResponseDto(post);
+        //return new PostResponseDto(post);
     }
 
     //private methods Service 내에서만 사용되는 메서드!
