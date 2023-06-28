@@ -1,5 +1,7 @@
 package com.sparta.voyageblog.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.voyageblog.dto.PostRequestDto;
 import com.sparta.voyageblog.dto.PostUpdateRequestDto;
 import jakarta.persistence.*;
@@ -33,7 +35,8 @@ public class Post extends Timestamped {
     @JoinColumn(name = "u_id", nullable = false)
     private User user;
 
-    //TODO Comment 등록할 때 commentList 에도 추가
+    //@JsonIgnore
+    //@JsonBackReference
     @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
 
@@ -48,5 +51,9 @@ public class Post extends Timestamped {
     public void updatePost(PostUpdateRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
+    }
+
+    public void addCommentList(Comment comment) {
+        this.commentList.add(comment);
     }
 }

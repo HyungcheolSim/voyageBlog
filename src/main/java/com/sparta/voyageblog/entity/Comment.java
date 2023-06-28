@@ -1,38 +1,51 @@
 package com.sparta.voyageblog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "comment")
-@IdClass(CommentId.class)
+//@IdClass(CommentId.class)
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class Comment extends Timestamped {
 
-    @Id
+
     //@EmbeddedId 코드
-    //@MapsId("postId")
-    @ManyToOne
+    //@JsonIgnore
+    @MapsId("postId")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "p_id", unique = true, nullable = false, updatable = false)
     public Post post;
 
-    @Id
+    @EmbeddedId
     // @GeneratedValue(strategy = GenerationType.IDENTITY) 사용 불가
-    //TODO comment 등록할 때 증가하는 코드를 추가
     @Column(name = "c_id", unique = true, nullable = false, updatable = false)
-    private Long id;
+    private CommentId id;
 
     @Column(name = "c_contents", nullable = false)
     private String contents;
 
     @Column(name = "c_username", nullable = false, length = 12)
     private String username;
+
+    //@JsonIgnore
+    //@JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "u_id", nullable = false)
     private User user;
+
+    public Comment(Post post, String contents, User user) {
+        this.post = post;
+        this.id = new CommentId(post.getId());
+        this.contents = contents;
+        this.username = user.getUsername();
+        this.user = user;
+    }
 
 }

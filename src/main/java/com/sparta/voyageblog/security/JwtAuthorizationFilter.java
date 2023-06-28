@@ -45,6 +45,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             try {
                 setAuthentication(info.getSubject());
+                log.info("JWT 검증필터 실행");
             } catch (Exception e) {
                 log.error(e.getMessage());
                 return;

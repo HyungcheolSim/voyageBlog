@@ -22,7 +22,8 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    //전체 게시글 조회
+    //전체 게시글 조회 
+    //TODO 댓글이 없는 게시글은 조회가 되는 상황
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponseDto>> getPosts() {
         return ResponseEntity.ok().body(postService.getPosts());
