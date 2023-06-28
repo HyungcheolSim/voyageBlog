@@ -50,7 +50,7 @@ public class PostController {
     //내가 작성한 특정 게시글 삭제
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<GeneralResponseDto> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postService.deletePost(id, userDetails.getUsername());
+        postService.deletePost(id, userDetails.getUser());
         return ResponseEntity.ok(new GeneralResponseDto("삭제 완료", HttpStatus.OK));
     }
 }
