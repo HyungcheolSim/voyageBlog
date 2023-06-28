@@ -32,6 +32,7 @@ public class Post extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "u_id", nullable = false)
     private User user;
+
     //TODO Comment 등록할 때 commentList 에도 추가
     @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
