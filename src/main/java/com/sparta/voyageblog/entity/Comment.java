@@ -1,7 +1,5 @@
 package com.sparta.voyageblog.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,9 +7,9 @@ import lombok.*;
 @Getter
 @Table(name = "comment")
 //@IdClass(CommentId.class)
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 @EqualsAndHashCode(callSuper = false)
 public class Comment extends Timestamped {
 
@@ -48,4 +46,7 @@ public class Comment extends Timestamped {
         this.user = user;
     }
 
+    public void update(String contents) {
+        setContents(contents);
+    }
 }
