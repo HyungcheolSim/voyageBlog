@@ -1,6 +1,8 @@
 package com.sparta.voyageblog.security;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.voyageblog.dto.GeneralResponseDto;
 import com.sparta.voyageblog.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -8,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -37,6 +40,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(tokenValue)) {
 
             if (!jwtUtil.validateToken(tokenValue)) {
+                tokenExceptionHandler(res,"토큰이 유효하지 않습니다.");
                 log.error("Token Error");
                 return;
             }
@@ -68,5 +72,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private Authentication createAuthentication(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    //예외 client 로 반환해주는 handler
+    public void tokenExceptionHandler(HttpServletResponse response,String msg){
+        response.setStatus(400);
+        response.setContentType("application/json");
+        try{
+            String error=new ObjectMapper().writeValueAsString(new GeneralResponseDto(msg, HttpStatus.BAD_REQUEST));
+            response.getWriter().write(error);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
     }
 }

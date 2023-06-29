@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -27,7 +28,8 @@ public class PostResponseDto {
         this.contents=post.getContents();
         this.createdAt=post.getCreatedAt();
         //this.modifiedAt=post.getModifiedAt();
-        this.commentList.addAll(post.getCommentList().stream().map(CommentResponseDto::new).toList());
+        this.commentList.addAll(post.getCommentList().stream().sorted(Comparator.comparing(Comment::getCreatedAt).reversed()).map(CommentResponseDto::new).toList());
+        //생성일 내림차순 정렬, 추가될 땐 맨 앞에 추가되로록함.
 
     }
     

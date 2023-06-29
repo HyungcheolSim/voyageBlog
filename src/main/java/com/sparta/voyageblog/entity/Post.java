@@ -1,7 +1,5 @@
 package com.sparta.voyageblog.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.voyageblog.dto.PostRequestDto;
 import com.sparta.voyageblog.dto.PostUpdateRequestDto;
 import jakarta.persistence.*;
@@ -54,6 +52,6 @@ public class Post extends Timestamped {
     }
 
     public void addCommentList(Comment comment) {
-        this.commentList.add(comment);
+        this.commentList.add(0,comment);
     }
 }

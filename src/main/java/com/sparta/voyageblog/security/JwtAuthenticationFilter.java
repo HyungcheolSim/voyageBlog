@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -69,8 +70,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         log.info("로그인 실패");
-        response.setStatus(401);
-        GeneralResponseDto dto = new GeneralResponseDto("로그인 실패" , HttpStatus.UNAUTHORIZED);
+        response.setStatus(400);
+        GeneralResponseDto dto = new GeneralResponseDto("회원을 찾을 수 없습니다." , HttpStatus.BAD_REQUEST);
         ObjectMapper objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(dto));
         //return 401 unauthorized

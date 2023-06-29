@@ -3,14 +3,12 @@ package com.sparta.voyageblog.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "user")
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {

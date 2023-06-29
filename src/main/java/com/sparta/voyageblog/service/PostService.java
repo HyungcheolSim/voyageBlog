@@ -7,9 +7,9 @@ import com.sparta.voyageblog.entity.Post;
 import com.sparta.voyageblog.entity.User;
 import com.sparta.voyageblog.entity.UserRoleEnum;
 import com.sparta.voyageblog.repository.PostRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<PostResponseDto> getPosts() {
         List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
@@ -31,13 +31,6 @@ public class PostService {
 
     //Post 생성
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
-        //양방향일 때
-        /*
-        Post post=new Post(requestDto, user);
-        user.addPostList(post);
-        return new PostResponseDto(postRepository.save(post));
-        */
-        // 단방향일 때
         return new PostResponseDto(postRepository.save(new Post(requestDto, user)));
     }
 

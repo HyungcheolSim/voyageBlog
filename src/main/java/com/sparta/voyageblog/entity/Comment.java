@@ -6,25 +6,15 @@ import lombok.*;
 @Entity
 @Getter
 @Table(name = "comment")
-//@IdClass(CommentId.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-@EqualsAndHashCode(callSuper = false)
 public class Comment extends Timestamped {
 
-
-    //@EmbeddedId 코드
-    //@JsonIgnore
-    @MapsId("postId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "p_id", unique = true, nullable = false, updatable = false)
-    public Post post;
-
-    @EmbeddedId
-    // @GeneratedValue(strategy = GenerationType.IDENTITY) 사용 불가
-    @Column(name = "c_id", unique = true, nullable = false, updatable = false)
-    private CommentId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "c_id", nullable = false, updatable = false)
+    private Long id;
 
     @Column(name = "c_contents", nullable = false)
     private String contents;
@@ -34,13 +24,16 @@ public class Comment extends Timestamped {
 
     //@JsonIgnore
     //@JsonManagedReference
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "u_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "p_id", nullable = false, updatable = false)
+    public Post post;
+
     public Comment(Post post, String contents, User user) {
         this.post = post;
-        this.id = new CommentId(post.getId());
         this.contents = contents;
         this.username = user.getUsername();
         this.user = user;
