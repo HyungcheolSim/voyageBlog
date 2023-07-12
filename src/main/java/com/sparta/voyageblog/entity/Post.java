@@ -3,9 +3,7 @@ package com.sparta.voyageblog.entity;
 import com.sparta.voyageblog.dto.PostRequestDto;
 import com.sparta.voyageblog.dto.PostUpdateRequestDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "post")
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +35,7 @@ public class Post extends Timestamped {
     @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
 
+    @Builder
     public Post(PostRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
         this.username = user.getUsername();

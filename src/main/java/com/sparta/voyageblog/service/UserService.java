@@ -30,7 +30,7 @@ public class UserService {
         if (checkUsername.isPresent()) {
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
-        String email=requestDto.getEmail();
+        String email = requestDto.getEmail();
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (requestDto.isAdmin()) {
@@ -41,8 +41,13 @@ public class UserService {
         }
 
         // 사용자 등록
-        User user = new User(username, password, email, role);
-        userRepository.save(user);
+        User user = User.builder()
+                .username(username)
+                .password(password)
+                .email(email)
+                .role(role)
+                .build();
+                userRepository.save(user);
     }
 
 }

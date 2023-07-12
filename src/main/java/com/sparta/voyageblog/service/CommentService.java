@@ -19,11 +19,15 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto createComment(CommentRequestDto requestDto, User user) {
-        //양방향일 때
-        Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        Comment comment = new Comment(post, requestDto.getContents(), user);
+        Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        Comment comment = Comment.builder()
+                .post(post)
+                .contents(requestDto.getContents())
+                .user(user)
+                .build();
         post.addCommentList(comment);
+
         log.info("댓글 " + comment.getContents() + " 등록");
         return new CommentResponseDto(commentRepository.save(comment));
     }
@@ -38,13 +42,13 @@ public class CommentService {
             }
             throw new IllegalArgumentException("회원님이 작성한 게시글이 아닙니다. 수정할 수 없습니다.");
         }
-        comment.update(commentRequestDto.getContents());
+        comment.updateComment(commentRequestDto.getContents());
         log.info("댓글 수정 실행");
         //comment list 에서의 수정도 있어야하겠네..
         //해당 post 의 comment list 에서 commentId가 일치하는 comment 를 찾아서 수정->stream 잘쓰고싶다..
         for (Comment com : post.getCommentList()) {
             if (com.getId().equals(comment.getId())) {
-                com.setContents(commentRequestDto.getContents());
+                com.updateComment(commentRequestDto.getContents());
             }
         }
         return new CommentResponseDto(comment);

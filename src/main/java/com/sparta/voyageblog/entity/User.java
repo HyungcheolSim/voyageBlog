@@ -2,15 +2,15 @@ package com.sparta.voyageblog.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "user")
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +35,7 @@ public class User {
     // private List<Post> postList =new ArrayList<>();
 
     //마찬가지로 comment 에 있어서도 user 측에서 작성한 댓글목록 보기 기능이 필요하면 그 때 양방향 관계로 바꾸겠다.
+    @Builder
     public User(String username, String password, String email, UserRoleEnum role) {
         this.username = username;
         this.password = password;

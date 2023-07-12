@@ -1,14 +1,15 @@
 package com.sparta.voyageblog.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "comment")
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends Timestamped {
 
     @Id
@@ -32,6 +33,7 @@ public class Comment extends Timestamped {
     @JoinColumn(name = "p_id", nullable = false, updatable = false)
     public Post post;
 
+    @Builder
     public Comment(Post post, String contents, User user) {
         this.post = post;
         this.contents = contents;
@@ -39,7 +41,7 @@ public class Comment extends Timestamped {
         this.user = user;
     }
 
-    public void update(String contents) {
-        setContents(contents);
+    public void updateComment(String contents) {
+        this.contents=contents;
     }
 }
