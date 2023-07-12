@@ -2,12 +2,10 @@ package com.sparta.voyageblog.dto;
 
 import com.sparta.voyageblog.entity.Comment;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
 public class CommentResponseDto {
     private String contents;
     private String username;

@@ -67,7 +67,8 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                         .requestMatchers(HttpMethod.GET,"/api/posts/**").permitAll() //posts 의 get 요청들 2개 빼고 인가받도록
-                        .requestMatchers("/api/user/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
+                        // '/api/user/'로 시작하는 요청 모두 인증 후 접근해야함
+                        // .requestMatchers("/api/user/**").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
 
         );

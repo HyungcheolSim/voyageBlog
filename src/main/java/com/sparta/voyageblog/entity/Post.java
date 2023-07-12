@@ -3,9 +3,7 @@ package com.sparta.voyageblog.entity;
 import com.sparta.voyageblog.dto.PostRequestDto;
 import com.sparta.voyageblog.dto.PostUpdateRequestDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,24 +11,23 @@ import java.util.List;
 @Entity
 @Table(name = "post")
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "p_id", unique = true, updatable = false, nullable = false)
+    @Column(name = "post_id", unique = true, updatable = false, nullable = false)
     private Long id;
-    @Column(name = "p_title", nullable = false, length = 32)
+    @Column(name = "post_title", nullable = false, length = 32)
     private String title;
-    @Column(name = "p_username", nullable = false, length = 12)
+    @Column(name = "post_username", nullable = false, length = 12)
     private String username;
-    @Column(name = "p_contents", nullable = false,columnDefinition = "text")
+    @Column(name = "post_contents", nullable = false,columnDefinition = "text")
     //255 이상의 문자를 저장하고 싶을 때 사용 columnDefinition = "text" 65535글자 가능
     private String contents;
 
     //default @ManyToOne(fetch = FetchType.EAGER)
     @ManyToOne
-    @JoinColumn(name = "u_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     //@JsonIgnore
@@ -38,6 +35,7 @@ public class Post extends Timestamped {
     @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
 
+    @Builder
     public Post(PostRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
         this.username = user.getUsername();

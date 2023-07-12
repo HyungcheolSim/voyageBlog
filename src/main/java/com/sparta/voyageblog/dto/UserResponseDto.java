@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+//아직 사용되지 않는다.
 public class UserResponseDto {
     private Long id;
     private String email;
