@@ -3,11 +3,11 @@ package com.sparta.voyageblog.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignupRequestDto {
     @Pattern(regexp = "^[a-z0-9+]{4,10}$") //4~10글자 영어 소문자+숫자
     @NotBlank

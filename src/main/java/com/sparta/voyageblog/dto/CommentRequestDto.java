@@ -1,10 +1,12 @@
 package com.sparta.voyageblog.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentRequestDto {
     private Long postId;
     private Long commentId;
