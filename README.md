@@ -24,6 +24,7 @@ https://documenter.getpostman.com/view/27930567/2s93z86NDq
 <summary>최종 UML</summary>
 <div markdown="1">
     <img src="https://i.postimg.cc/rpbDGqqQ/voyage-Blog-usecase-Diagram-lv3.png" height="700">
+<img src="lv4_flow_chart.png" height="700">
 </div>
 </details>
 <details>
