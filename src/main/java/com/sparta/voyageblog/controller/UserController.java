@@ -3,6 +3,7 @@ package com.sparta.voyageblog.controller;
 
 import com.sparta.voyageblog.dto.GeneralResponseDto;
 import com.sparta.voyageblog.dto.SignupRequestDto;
+import com.sparta.voyageblog.exception.NotValidInputException;
 import com.sparta.voyageblog.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,14 +28,20 @@ public class UserController {
 
     //회원가입
     @PostMapping("/auth/signup")
-    public ResponseEntity<GeneralResponseDto> signUp(@RequestBody @Valid SignupRequestDto signupRequestDto, BindingResult bindingResult){
+    public ResponseEntity<GeneralResponseDto> signUp(@RequestBody @Valid SignupRequestDto signupRequestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+
         if(fieldErrors.size() > 0) {
+            StringBuilder message=new StringBuilder();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
+                message.append(fieldError.getField())
+                        .append(" 필드 ")
+                        .append(fieldError.getDefaultMessage());
+
             }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new NotValidInputException(String.valueOf(message));
         }
         userService.signup(signupRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new GeneralResponseDto("회원가입 완료", HttpStatus.CREATED));

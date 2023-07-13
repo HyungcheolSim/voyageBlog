@@ -1,42 +1,3 @@
-# voyageBlog
-spring 개인과제 나만의 블로그 만들기
-
-프로젝트 설명 & API 명세서 & 개발 및 리팩토링 과정
---------------------
-https://boundless-pudding-4e9.notion.site/189b7be021e5442993234dcbb0d185e3?pvs=4
-
-----------------------
-## 리팩토링
-- [ ]  cascade →post update, delete에 적용
-- [ ]  로그 디테일하게 남기기
-- [ ]  access token
-- [ ]  refresh token
-- [ ]  swagger 적용
-- [ ]  readme 수정
-------------------------------
-
-## API 명세서 - swagger 적용 예정
-https://documenter.getpostman.com/view/27930567/2s93z86NDq
-
-<details>
-<summary>Lv4 UML -작업중</summary>
-<div markdown="1">
-    <img src="https://i.postimg.cc/rpbDGqqQ/voyage-Blog-usecase-Diagram-lv3.png" height="700">
-</div>
-</details>
-<details>
-<summary>Lv4 ERD</summary>
-<div markdown="2">
-
-<img src="lv4_erd.PNG" height="700">
-
-</div>
-</details>
-<details>
-<summary>Lv4 DDL</summary>
-<div markdown="2">
-
-```
 create table if not exists post.user
 (
     user_id       bigint auto_increment
@@ -104,9 +65,4 @@ create table if not exists post.post_likes
     constraint FKmxmoc9p5ndijnsqtvsjcuoxm3
         foreign key (post_id) references post.post (post_id)
 );
-```
-
-</div>
-</details>
-
 
