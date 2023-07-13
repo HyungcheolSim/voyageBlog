@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = true) // Spring Security 지원을 가능하게 함 //실행되는 filter chain 을 확인할 수 있는 옵션 debug=true;
+@EnableWebSecurity // Spring Security 지원을 가능하게 함 //실행되는 filter chain 을 확인할 수 있는 옵션 debug=true;
 //@EnableMethodSecurity(securedEnabled = true) //@Secured 어노테이션 활성화
 public class WebSecurityConfig {
 
