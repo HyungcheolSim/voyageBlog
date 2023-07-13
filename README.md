@@ -19,10 +19,10 @@ https://boundless-pudding-4e9.notion.site/189b7be021e5442993234dcbb0d185e3?pvs=4
 https://documenter.getpostman.com/view/27930567/2s93z86NDq
 
 <details>
-<summary>Lv4 UML -작업중</summary>
+<summary>Lv4 UML </summary>
 <div markdown="1">
     <img src="https://i.postimg.cc/rpbDGqqQ/voyage-Blog-usecase-Diagram-lv3.png" height="700">
-<img src="lv4_flow_chart.png" height="700">
+    <img src="lv4_flow_chart.png" height="700">
 </div>
 </details>
 <details>
