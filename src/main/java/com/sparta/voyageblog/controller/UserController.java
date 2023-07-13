@@ -26,7 +26,7 @@ public class UserController {
     private final UserService userService;
 
     //회원가입
-    @PostMapping("/user/signup")
+    @PostMapping("/auth/signup")
     public ResponseEntity<GeneralResponseDto> signUp(@RequestBody @Valid SignupRequestDto signupRequestDto, BindingResult bindingResult){
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -37,6 +37,6 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         userService.signup(signupRequestDto);
-        return ResponseEntity.ok(new GeneralResponseDto("회원가입 완료", HttpStatus.OK));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new GeneralResponseDto("회원가입 완료", HttpStatus.CREATED));
     }
 }
