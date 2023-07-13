@@ -2,7 +2,6 @@ package com.sparta.voyageblog.dto;
 
 import com.sparta.voyageblog.entity.User;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 //아직 사용되지 않는다.
