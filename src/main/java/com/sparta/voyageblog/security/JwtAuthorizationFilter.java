@@ -78,6 +78,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     public void tokenExceptionHandler(HttpServletResponse response,String msg){
         response.setStatus(400);
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         try{
             String error=new ObjectMapper().writeValueAsString(new GeneralResponseDto(msg, HttpStatus.BAD_REQUEST));
             response.getWriter().write(error);
