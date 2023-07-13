@@ -1,10 +1,8 @@
 package com.sparta.voyageblog.controller;
 
-import com.sparta.voyageblog.dto.GeneralResponseDto;
-import com.sparta.voyageblog.dto.PostRequestDto;
-import com.sparta.voyageblog.dto.PostResponseDto;
-import com.sparta.voyageblog.dto.PostUpdateRequestDto;
+import com.sparta.voyageblog.dto.*;
 import com.sparta.voyageblog.security.UserDetailsImpl;
+import com.sparta.voyageblog.service.PostLikesService;
 import com.sparta.voyageblog.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +19,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class PostController {
     private final PostService postService;
+    private final PostLikesService postLikesService;
 
     //전체 게시글 조회
     @GetMapping("/posts")
@@ -31,7 +30,7 @@ public class PostController {
     //게시글 등록
     @PostMapping("/posts")
     public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(postService.createPost(requestDto, userDetails.getUser()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(requestDto, userDetails.getUser()));
     }
 
     //특정 게시글 조회
@@ -51,5 +50,19 @@ public class PostController {
     public ResponseEntity<GeneralResponseDto> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postService.deletePost(id, userDetails.getUser());
         return ResponseEntity.ok(new GeneralResponseDto("삭제 완료", HttpStatus.OK));
+    }
+
+    //게시글 좋아요
+    @PostMapping("/posts/{id}/likes")
+    public ResponseEntity<GeneralResponseDto> insertPostLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        postLikesService.insertPostLikes(id,userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new GeneralResponseDto("좋아요 등록 완료", HttpStatus.CREATED));
+    }
+
+    //게시글 좋아요 취소
+    @DeleteMapping("/posts/likes/{id}")     //post likes id
+    public ResponseEntity<GeneralResponseDto> deletePostLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postLikesService.deletePostLikes(id, userDetails.getUser());
+        return ResponseEntity.ok(new GeneralResponseDto("좋아요 취소 완료", HttpStatus.OK));
     }
 }

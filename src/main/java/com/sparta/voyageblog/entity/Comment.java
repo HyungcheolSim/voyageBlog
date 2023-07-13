@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -23,6 +24,10 @@ public class Comment extends Timestamped {
     @Column(name = "comment_username", nullable = false, length = 12)
     private String username;
 
+    @ColumnDefault("0")
+    @Column(name="comment_likes_count",nullable = false)
+    private Integer likesCount;
+
     //@JsonIgnore
     //@JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,10 +43,18 @@ public class Comment extends Timestamped {
         this.post = post;
         this.contents = contents;
         this.username = user.getUsername();
+        this.likesCount=0;
         this.user = user;
     }
 
     public void updateComment(String contents) {
         this.contents=contents;
+    }
+
+    public void likesCountPlus() {
+        this.likesCount++;
+    }
+    public void likesCountMinus() {
+        this.likesCount--;
     }
 }

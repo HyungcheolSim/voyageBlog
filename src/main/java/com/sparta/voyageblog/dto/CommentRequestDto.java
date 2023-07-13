@@ -1,6 +1,5 @@
 package com.sparta.voyageblog.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

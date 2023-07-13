@@ -4,6 +4,7 @@ import com.sparta.voyageblog.dto.PostRequestDto;
 import com.sparta.voyageblog.dto.PostUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,10 @@ public class Post extends Timestamped {
     //255 이상의 문자를 저장하고 싶을 때 사용 columnDefinition = "text" 65535글자 가능
     private String contents;
 
+    @ColumnDefault("0")
+    @Column(name="post_likes_count",nullable = false)
+    private Integer likesCount;
+
     //default @ManyToOne(fetch = FetchType.EAGER)
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -41,6 +46,7 @@ public class Post extends Timestamped {
         this.username = user.getUsername();
         this.contents = requestDto.getContents();
         this.user = user;
+        this.likesCount=0;
         //user.getPostList().add(this); //양방향 연관관계 처리
     }
 
@@ -51,5 +57,12 @@ public class Post extends Timestamped {
 
     public void addCommentList(Comment comment) {
         this.commentList.add(0,comment);
+    }
+
+    public void likesCountPlus() {
+        this.likesCount++;
+    }
+    public void likesCountMinus() {
+        this.likesCount--;
     }
 }
