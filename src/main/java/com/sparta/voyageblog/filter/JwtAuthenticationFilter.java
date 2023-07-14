@@ -1,10 +1,11 @@
-package com.sparta.voyageblog.security;
+package com.sparta.voyageblog.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.voyageblog.dto.GeneralResponseDto;
 import com.sparta.voyageblog.dto.LoginRequestDto;
 import com.sparta.voyageblog.entity.UserRoleEnum;
 import com.sparta.voyageblog.jwt.JwtUtil;
+import com.sparta.voyageblog.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,10 +35,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throw new UnsupportedOperationException("허용하지 않는 메서드입니다.");
         }
         try {
-
             LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
-
-
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
                             requestDto.getUsername(),
@@ -62,7 +60,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 응답 본문 추가
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        GeneralResponseDto dto = new GeneralResponseDto("로그인 성공" , HttpStatus.OK);
+        GeneralResponseDto dto = new GeneralResponseDto("로그인 성공", HttpStatus.OK);
         ObjectMapper objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(dto));
     }

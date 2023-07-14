@@ -43,11 +43,8 @@ public class PostService {
     @Transactional
     public PostResponseDto updatePost(PostUpdateRequestDto requestDto, User user) {
         Post post = findPost(requestDto.getId()); //기존 것
-        if (!post.getUsername().equals(user.getUsername())) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
-            if(!user.getRole().equals(UserRoleEnum.ADMIN)) {
-                throw new SecurityException("작성자만 삭제/수정할 수 있습니다.");
-            }
-            throw new IllegalArgumentException("회원님이 작성한 게시글이 아닙니다. 수정할 수 없습니다.");
+        if (!(post.getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN))) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
+            throw new IllegalArgumentException("게시글 수정할 권한이 없습니다.");
         }
         post.updatePost(requestDto);
         return new PostResponseDto(post);
@@ -56,11 +53,8 @@ public class PostService {
     @Transactional
     public void deletePost(Long id, User user) {
         Post post = findPost(id);
-        if (!post.getUsername().equals(user.getUsername())) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
-            if(!user.getRole().equals(UserRoleEnum.ADMIN)) {
-                throw new SecurityException("작성자만 삭제/수정할 수 있습니다.");
-            }
-            throw new IllegalArgumentException("회원님이 작성한 게시글이 아닙니다. 수정할 수 없습니다.");
+        if (!(post.getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN))) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
+            throw new IllegalArgumentException("게시글 삭제할 권한이 없습니다.");
         }
         postRepository.delete(post);
     }

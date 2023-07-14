@@ -28,19 +28,11 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND
         );
     }
-    @ExceptionHandler({SecurityException.class})
-    public ResponseEntity<GeneralResponseDto> SecurityExceptionHandler(SecurityException ex){
+    @ExceptionHandler({NotValidInputException.class})
+    public ResponseEntity<GeneralResponseDto> notValidInputExceptionHandler(NotValidInputException ex){
         GeneralResponseDto responseDto=new GeneralResponseDto(ex.getMessage(),HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(
                 responseDto,
-                HttpStatus.BAD_REQUEST
-        );
-    }
-    @ExceptionHandler({NotValidInputException.class})
-    public ResponseEntity<GeneralResponseDto> notValidInputExceptionHandler(NotValidInputException ex){
-        GeneralResponseDto responsedto=new GeneralResponseDto(ex.getMessage(),HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(
-                responsedto,
                 HttpStatus.BAD_REQUEST
         );
     }

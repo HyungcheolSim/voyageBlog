@@ -36,11 +36,8 @@ public class CommentService {
     public CommentResponseDto updateComment(CommentRequestDto commentRequestDto, User user) {
         Post post = postRepository.findById(commentRequestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
         Comment comment = commentRepository.findByPost_IdAndId(commentRequestDto.getPostId(), commentRequestDto.getCommentId()).orElseThrow(() -> new IllegalArgumentException("댓글이나 게시글이 존재하지 않습니다."));
-        if (!comment.getId().equals(user.getId())) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
-            if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
-                throw new SecurityException("이 게시글을 수정할 권한이 없습니다.");
-            }
-            throw new IllegalArgumentException("회원님이 작성한 게시글이 아닙니다. 수정할 수 없습니다.");
+        if (!(comment.getUser().getId().equals(user.getId()) || user.getRole().equals(UserRoleEnum.ADMIN))) { //comment 내 user의 id와 현재 로그인한 user의 id 비교해서 다르면 예외
+            throw new IllegalArgumentException("이 댓글을 수정할 권한이 없습니다.");
         }
         comment.updateComment(commentRequestDto.getContents());
         log.info("댓글 수정 실행");
@@ -57,11 +54,8 @@ public class CommentService {
     @Transactional
     public void deleteComment(CommentRequestDto commentRequestDto, User user) {
         Comment comment = commentRepository.findByPost_IdAndId(commentRequestDto.getPostId(), commentRequestDto.getCommentId()).orElseThrow(() -> new IllegalArgumentException("댓글이나 게시글이 존재하지 않습니다."));
-        if (!comment.getId().equals(user.getId())) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
-            if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
-                throw new SecurityException("이 게시글을 삭제할 권한이 없습니다.");
-            }
-            throw new IllegalArgumentException("회원님이 작성한 게시글이 아닙니다. 삭제할 수 없습니다.");
+        if (!(comment.getUser().getId().equals(user.getId()) || user.getRole().equals(UserRoleEnum.ADMIN))) {
+            throw new IllegalArgumentException("이 댓글을 삭제할 권한이 없습니다.");
         }
         commentRepository.delete(comment);
     }
