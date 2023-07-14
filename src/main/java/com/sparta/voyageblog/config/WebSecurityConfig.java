@@ -1,9 +1,10 @@
 package com.sparta.voyageblog.config;
 
 
+import com.sparta.voyageblog.filter.ExceptionHandlerFilter;
+import com.sparta.voyageblog.filter.JwtAuthenticationFilter;
+import com.sparta.voyageblog.filter.JwtAuthorizationFilter;
 import com.sparta.voyageblog.jwt.JwtUtil;
-import com.sparta.voyageblog.security.JwtAuthenticationFilter;
-import com.sparta.voyageblog.security.JwtAuthorizationFilter;
 import com.sparta.voyageblog.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -23,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity // Spring Security 지원을 가능하게 함 //실행되는 filter chain 을 확인할 수 있는 옵션 debug=true;
+@EnableWebSecurity(debug = true) // Spring Security 지원을 가능하게 함 //실행되는 filter chain 을 확인할 수 있는 옵션 debug=true;
 //@EnableMethodSecurity(securedEnabled = true) //@Secured 어노테이션 활성화
 public class WebSecurityConfig {
 
@@ -40,6 +41,12 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
+    @Bean
+    public ExceptionHandlerFilter exceptionHandlerFilter() {
+        return new ExceptionHandlerFilter();
+    }
+
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
@@ -66,7 +73,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .requestMatchers(HttpMethod.GET,"/api/posts/**").permitAll() //posts 의 get 요청들 2개 빼고 인가받도록
+                        .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll() //posts 의 get 요청들 2개 빼고 인가받도록
                         .requestMatchers("/api/auth/**").permitAll()
                         // '/api/user/'로 시작하는 요청 모두 인증 후 접근해야함
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
@@ -77,8 +84,10 @@ public class WebSecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
 
         // 필터 관리
-        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        http.addFilterBefore(exceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class) // 1. 에러필터 2. 아디비번필터
+                .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class) // 1. 에러필터 2. Author 필터 3. 아디비번필터
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // 1. 에러필터 2. Author 필터 3. Authen 필터 4. 아디비번필터
 
         return http.build();
     }
