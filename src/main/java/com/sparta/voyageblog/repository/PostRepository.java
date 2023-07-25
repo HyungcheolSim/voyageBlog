@@ -9,4 +9,5 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     //내림차순 정렬
     List<Post> findAllByOrderByCreatedAtDesc();
 
+
 }

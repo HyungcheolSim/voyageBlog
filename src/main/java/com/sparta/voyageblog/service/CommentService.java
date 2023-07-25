@@ -41,8 +41,7 @@ public class CommentService {
         }
         comment.updateComment(commentRequestDto.getContents());
         log.info("댓글 수정 실행");
-        //comment list 에서의 수정도 있어야하겠네..
-        //해당 post 의 comment list 에서 commentId가 일치하는 comment 를 찾아서 수정->stream 잘쓰고싶다..
+
         for (Comment com : post.getCommentList()) {
             if (com.getId().equals(comment.getId())) {
                 com.updateComment(commentRequestDto.getContents());

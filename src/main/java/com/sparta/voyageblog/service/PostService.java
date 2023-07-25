@@ -4,14 +4,15 @@ import com.sparta.voyageblog.dto.PostRequestDto;
 import com.sparta.voyageblog.dto.PostResponseDto;
 import com.sparta.voyageblog.dto.PostUpdateRequestDto;
 import com.sparta.voyageblog.entity.Post;
+import com.sparta.voyageblog.entity.PostLikes;
 import com.sparta.voyageblog.entity.User;
-import com.sparta.voyageblog.entity.UserRoleEnum;
+import com.sparta.voyageblog.repository.PostLikesRepository;
 import com.sparta.voyageblog.repository.PostRepository;
+import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,14 +20,11 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final PostLikesRepository postLikesRepository;
 
-    @Transactional(readOnly = true)
+    //전체 post 조회
     public List<PostResponseDto> getPosts() {
-        List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
-        List<PostResponseDto> postResponseDtos = new ArrayList<>();
-        for (Post post : postList)
-            postResponseDtos.add(new PostResponseDto(post));
-        return postResponseDtos;
+        return postRepository.findAllByOrderByCreatedAtDesc().stream().map(PostResponseDto::new).toList();
     }
 
     //Post 생성
@@ -41,29 +39,44 @@ public class PostService {
 
     //Post 수정
     @Transactional
-    public PostResponseDto updatePost(PostUpdateRequestDto requestDto, User user) {
-        Post post = findPost(requestDto.getId()); //기존 것
-        if (!(post.getUser().getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN))) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
-            throw new IllegalArgumentException("게시글 수정할 권한이 없습니다.");
-        }
+    public PostResponseDto updatePost(Post post, PostUpdateRequestDto requestDto, User user) {
         post.updatePost(requestDto);
         return new PostResponseDto(post);
     }
 
     @Transactional
-    public void deletePost(Long id, User user) {
-        Post post = findPost(id);
-        if (!(post.getUser().getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN))) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
-            throw new IllegalArgumentException("게시글 삭제할 권한이 없습니다.");
-        }
+    public void deletePost(Post post, User user) {
         postRepository.delete(post);
     }
 
-    //private methods Service 내에서만 사용되는 메서드!
     //특정 id를 가지는 Post 를 찾는 method, getPostById와 다른점은 리턴값이 post 객체라는 점
-    private Post findPost(Long id) {
+    public Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 게시글은 존재하지 않습니다.")
         );
+    }
+
+    @Transactional
+    public void likePost(Long postId, User user) {
+        Post post = findPost(postId);
+        if (!postLikesRepository.existsByPostAndUser(post, user)) {
+            PostLikes postLikes = PostLikes.builder()
+                    .post(post)
+                    .user(user)
+                    .build();
+            postLikesRepository.save(postLikes);
+            post.likesCountPlus();
+        } else {
+            throw new DuplicateRequestException("이미 좋아요를 누른 상태입니다.");
+
+        }
+    }
+
+    @Transactional
+    public void deleteLikePost(Long postId, User user) {
+        Post post = findPost(postId);
+        PostLikes postLikes = postLikesRepository.findByUserAndPost(user, post).orElseThrow(() -> new IllegalArgumentException("본인이 누른 좋아요가 아닙니다."));
+        postLikesRepository.delete(postLikes);
+        post.likesCountMinus();
     }
 }
