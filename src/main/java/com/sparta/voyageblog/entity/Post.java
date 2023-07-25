@@ -50,11 +50,6 @@ public class Post extends Timestamped {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
     }
-
-    public void addCommentList(Comment comment) {
-        this.commentList.add(0,comment);
-    }
-
     public void likesCountPlus() {
         this.likesCount++;
     }

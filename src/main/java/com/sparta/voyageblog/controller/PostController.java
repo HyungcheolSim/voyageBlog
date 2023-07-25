@@ -22,7 +22,7 @@ public class PostController {
     public ResponseEntity<ApiResponseDto> getPosts() {
         return ResponseEntity.ok().body(
                 new ApiResponseDto("특정 게시글 조회 성공",
-                        HttpStatus.ACCEPTED,
+                        HttpStatus.OK,
                         postService.getPosts()
                 ));
     }

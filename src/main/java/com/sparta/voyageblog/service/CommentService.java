@@ -2,7 +2,11 @@ package com.sparta.voyageblog.service;
 
 import com.sparta.voyageblog.dto.CommentRequestDto;
 import com.sparta.voyageblog.dto.CommentResponseDto;
-import com.sparta.voyageblog.entity.*;
+import com.sparta.voyageblog.entity.Comment;
+import com.sparta.voyageblog.entity.CommentLikes;
+import com.sparta.voyageblog.entity.Post;
+import com.sparta.voyageblog.entity.User;
+import com.sparta.voyageblog.repository.CommentLikesRepository;
 import com.sparta.voyageblog.repository.CommentRepository;
 import com.sparta.voyageblog.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +14,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final CommentLikesRepository commentLikesRepository;
 
     @Transactional
     public CommentResponseDto createComment(CommentRequestDto requestDto, User user) {
@@ -26,36 +33,64 @@ public class CommentService {
                 .contents(requestDto.getContents())
                 .user(user)
                 .build();
-        post.addCommentList(comment);
+
+        post.getCommentList().add(comment);
 
         log.info("댓글 " + comment.getContents() + " 등록");
         return new CommentResponseDto(commentRepository.save(comment));
     }
 
     @Transactional
-    public CommentResponseDto updateComment(CommentRequestDto commentRequestDto, User user) {
-        Post post = postRepository.findById(commentRequestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        Comment comment = commentRepository.findByPost_IdAndId(commentRequestDto.getPostId(), commentRequestDto.getCommentId()).orElseThrow(() -> new IllegalArgumentException("댓글이나 게시글이 존재하지 않습니다."));
-        if (!(comment.getUser().getId().equals(user.getId()) || user.getRole().equals(UserRoleEnum.ADMIN))) { //comment 내 user의 id와 현재 로그인한 user의 id 비교해서 다르면 예외
-            throw new IllegalArgumentException("이 댓글을 수정할 권한이 없습니다.");
-        }
-        comment.updateComment(commentRequestDto.getContents());
-        log.info("댓글 수정 실행");
+    public CommentResponseDto updateComment(Comment comment, CommentRequestDto commentRequestDto, User user) {
 
+        comment.updateComment(commentRequestDto.getContents());
+
+        Post post = comment.getPost();
         for (Comment com : post.getCommentList()) {
             if (com.getId().equals(comment.getId())) {
                 com.updateComment(commentRequestDto.getContents());
             }
         }
+        log.info("댓글 수정 완료");
         return new CommentResponseDto(comment);
     }
 
     @Transactional
-    public void deleteComment(CommentRequestDto commentRequestDto, User user) {
-        Comment comment = commentRepository.findByPost_IdAndId(commentRequestDto.getPostId(), commentRequestDto.getCommentId()).orElseThrow(() -> new IllegalArgumentException("댓글이나 게시글이 존재하지 않습니다."));
-        if (!(comment.getUser().getId().equals(user.getId()) || user.getRole().equals(UserRoleEnum.ADMIN))) {
-            throw new IllegalArgumentException("이 댓글을 삭제할 권한이 없습니다.");
-        }
+    public void deleteComment(Comment comment, User user) {
+
         commentRepository.delete(comment);
+        Post post = comment.getPost();
+        post.getCommentList().remove(comment);
+        log.info("댓글 삭제 완료");
+    }
+
+    public Comment findComment(Long id) {
+        return commentRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("선택한 댓글은 존재하지 않습니다.")
+        );
+    }
+
+    @Transactional
+    public void likeComment(Long commentId, User user) {
+        Comment comment = findComment(commentId);
+        if (commentLikesRepository.existsByCommentAndUser(comment, user)) {
+            throw new IllegalArgumentException("이미 좋아요를 누른 상태입니다.");
+        } else {
+            commentLikesRepository.save(new CommentLikes(comment,user));
+            comment.likesCountPlus();
+        }
+    }
+
+    @Transactional
+    public void deleteLikeComment(Long commentId, User user) {
+        Comment comment = findComment(commentId);
+        Optional<CommentLikes> commentLikes = commentLikesRepository.findByUserAndComment(comment, user);
+
+        if (commentLikes.isPresent()) {
+            commentLikesRepository.delete(commentLikes.get());
+            comment.likesCountMinus();
+        } else {
+            throw new IllegalArgumentException("해당 댓글에 취소할 좋아요가 없습니다.");
+        }
     }
 }
