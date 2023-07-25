@@ -20,8 +20,6 @@ public class Post extends Timestamped {
     private Long id;
     @Column(name = "post_title", nullable = false, length = 32)
     private String title;
-    @Column(name = "post_username", nullable = false, length = 12)
-    private String username;
     @Column(name = "post_contents", nullable = false,columnDefinition = "text")
     //255 이상의 문자를 저장하고 싶을 때 사용 columnDefinition = "text" 65535글자 가능
     private String contents;
@@ -43,11 +41,9 @@ public class Post extends Timestamped {
     @Builder
     public Post(PostRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
-        this.username = user.getUsername();
         this.contents = requestDto.getContents();
         this.user = user;
         this.likesCount=0;
-        //user.getPostList().add(this); //양방향 연관관계 처리
     }
 
     public void updatePost(PostUpdateRequestDto requestDto) {

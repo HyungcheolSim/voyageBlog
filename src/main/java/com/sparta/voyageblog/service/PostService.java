@@ -43,7 +43,7 @@ public class PostService {
     @Transactional
     public PostResponseDto updatePost(PostUpdateRequestDto requestDto, User user) {
         Post post = findPost(requestDto.getId()); //기존 것
-        if (!(post.getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN))) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
+        if (!(post.getUser().getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN))) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
             throw new IllegalArgumentException("게시글 수정할 권한이 없습니다.");
         }
         post.updatePost(requestDto);
@@ -53,7 +53,7 @@ public class PostService {
     @Transactional
     public void deletePost(Long id, User user) {
         Post post = findPost(id);
-        if (!(post.getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN))) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
+        if (!(post.getUser().getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN))) { //기존 게시글의 username 과 현재 로그인한 username 비교해서 다르면 예외
             throw new IllegalArgumentException("게시글 삭제할 권한이 없습니다.");
         }
         postRepository.delete(post);

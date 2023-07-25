@@ -2,7 +2,7 @@ package com.sparta.voyageblog.controller;
 
 import com.sparta.voyageblog.dto.CommentRequestDto;
 import com.sparta.voyageblog.dto.CommentResponseDto;
-import com.sparta.voyageblog.dto.GeneralResponseDto;
+import com.sparta.voyageblog.dto.ApiResponseDto;
 import com.sparta.voyageblog.security.UserDetailsImpl;
 import com.sparta.voyageblog.service.CommentLikesService;
 import com.sparta.voyageblog.service.CommentService;
@@ -35,22 +35,22 @@ public class CommentController {
 
     //댓글 삭제
     @DeleteMapping("/comments")
-    public ResponseEntity<GeneralResponseDto> deleteComment(@RequestBody CommentRequestDto commentRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<ApiResponseDto> deleteComment(@RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         commentService.deleteComment(commentRequestDto,userDetails.getUser());
-        return ResponseEntity.ok(new GeneralResponseDto("댓글 삭제 완료", HttpStatus.OK));
+        return ResponseEntity.ok(new ApiResponseDto("댓글 삭제 완료", HttpStatus.OK));
     }
 
     //댓글 좋아요
     @PostMapping("/comments/{id}/likes")
-    public ResponseEntity<GeneralResponseDto> insertCommentLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<ApiResponseDto> insertCommentLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         commentLikesService.insertCommentLikes(id,userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new GeneralResponseDto("좋아요 등록 완료", HttpStatus.CREATED));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponseDto("좋아요 등록 완료", HttpStatus.CREATED));
     }
 
     //댓글 좋아요 취소
     @DeleteMapping("/comments/likes/{id}")     //comment likes id
-    public ResponseEntity<GeneralResponseDto> deleteCommentLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ApiResponseDto> deleteCommentLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentLikesService.deleteCommentLikes(id, userDetails.getUser());
-        return ResponseEntity.ok(new GeneralResponseDto("좋아요 취소 완료", HttpStatus.OK));
+        return ResponseEntity.ok(new ApiResponseDto("좋아요 취소 완료", HttpStatus.OK));
     }
 }
