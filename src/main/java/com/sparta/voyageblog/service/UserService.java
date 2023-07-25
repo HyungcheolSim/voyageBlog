@@ -6,7 +6,7 @@ import com.sparta.voyageblog.entity.UserRoleEnum;
 import com.sparta.voyageblog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
+    import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +26,12 @@ public class UserService {
     public void signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
-
         // 회원 중복 확인
         Optional<User> checkUsername = userRepository.findByUsername(username);
         if (checkUsername.isPresent()) {
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
+
         String email = requestDto.getEmail();
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
@@ -49,7 +49,8 @@ public class UserService {
                 .email(email)
                 .role(role)
                 .build();
-                userRepository.save(user);
+
+        userRepository.save(user);
     }
 
 }
