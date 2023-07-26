@@ -1,6 +1,5 @@
 package com.sparta.voyageblog.entity;
 
-import com.sparta.voyageblog.dto.PostRequestDto;
 import com.sparta.voyageblog.dto.PostUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,6 +12,8 @@ import java.util.List;
 @Table(name = "post")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,14 +38,6 @@ public class Post extends Timestamped {
     //@JsonBackReference
     @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
-
-    @Builder
-    public Post(PostRequestDto requestDto, User user) {
-        this.title = requestDto.getTitle();
-        this.contents = requestDto.getContents();
-        this.user = user;
-        this.likesCount=0;
-    }
 
     public void updatePost(PostUpdateRequestDto requestDto) {
         this.title = requestDto.getTitle();

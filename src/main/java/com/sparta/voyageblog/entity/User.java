@@ -2,15 +2,14 @@ package com.sparta.voyageblog.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @Table(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,12 +28,4 @@ public class User {
     @Column(name = "user_role", nullable = false, length = 12)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
-
-    @Builder
-    public User(String username, String password, String email, UserRoleEnum role) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.role = role;
-    }
 }
