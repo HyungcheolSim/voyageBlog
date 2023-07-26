@@ -21,16 +21,16 @@ import java.util.concurrent.RejectedExecutionException;
 @Component
 public class RoleCheckAop {
 
-    @Pointcut("execution(* com.sparta.voyageblog.service.PostService.updatePost(..))")
+    @Pointcut("execution(* com.sparta.voyageblog.service.PostServiceImpl.updatePost(..))")
     private void updatePost() {}
 
-    @Pointcut("execution(* com.sparta.voyageblog.service.PostService.deletePost(..))")
+    @Pointcut("execution(* com.sparta.voyageblog.service.PostServiceImpl.deletePost(..))")
     private void deletePost() {}
 
-    @Pointcut("execution(* com.sparta.voyageblog.service.CommentService.updateComment(..))")
+    @Pointcut("execution(* com.sparta.voyageblog.service.CommentServiceImpl.updateComment(..))")
     private void updateComment() {}
 
-    @Pointcut("execution(* com.sparta.voyageblog.service.CommentService.deleteComment(..))")
+    @Pointcut("execution(* com.sparta.voyageblog.service.CommentServiceImpl.deleteComment(..))")
     private void deleteComment() {}
 
 

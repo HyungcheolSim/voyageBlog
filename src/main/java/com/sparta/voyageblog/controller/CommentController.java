@@ -3,7 +3,7 @@ package com.sparta.voyageblog.controller;
 import com.sparta.voyageblog.dto.ApiResponseDto;
 import com.sparta.voyageblog.dto.CommentRequestDto;
 import com.sparta.voyageblog.security.UserDetailsImpl;
-import com.sparta.voyageblog.service.CommentService;
+import com.sparta.voyageblog.service.CommentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class CommentController {
-    private final CommentService commentService;
+    private final CommentServiceImpl commentServiceImpl;
 
     //댓글 등록
 
@@ -23,7 +23,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new ApiResponseDto("게시글 등록 성공",
                         HttpStatus.CREATED,
-                        commentService.createComment(commentRequestDto, userDetails.getUser())
+                        commentServiceImpl.createComment(commentRequestDto, userDetails.getUser())
                 ));
     }
 
@@ -34,28 +34,28 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(
                 new ApiResponseDto("댓글 수정 완료",
                         HttpStatus.ACCEPTED,
-                        commentService.updateComment(commentService.findComment(id),commentRequestDto,userDetails.getUser())
+                        commentServiceImpl.updateComment(commentServiceImpl.findComment(id),commentRequestDto,userDetails.getUser())
                 ));
     }
 
     //댓글 삭제
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<ApiResponseDto> deleteComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        commentService.deleteComment(commentService.findComment(id),userDetails.getUser());
+        commentServiceImpl.deleteComment(commentServiceImpl.findComment(id),userDetails.getUser());
         return ResponseEntity.ok(new ApiResponseDto("댓글 삭제 완료", HttpStatus.OK));
     }
 
     //댓글 좋아요
     @PostMapping("/comments/{id}/likes")
     public ResponseEntity<ApiResponseDto> likeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        commentService.likeComment(id,userDetails.getUser());
+        commentServiceImpl.likeComment(id,userDetails.getUser());
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponseDto("좋아요 등록 완료", HttpStatus.CREATED));
     }
 
     //댓글 좋아요 취소
     @DeleteMapping("/comments/{id}/likes")     //comment likes id
     public ResponseEntity<ApiResponseDto> deleteLikeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        commentService.deleteLikeComment(id, userDetails.getUser());
+        commentServiceImpl.deleteLikeComment(id, userDetails.getUser());
         return ResponseEntity.ok(new ApiResponseDto("좋아요 취소 완료", HttpStatus.OK));
     }
 }

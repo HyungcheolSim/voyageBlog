@@ -21,9 +21,6 @@ public class Comment extends Timestamped {
     @Column(name = "comment_contents", nullable = false)
     private String contents;
 
-    @Column(name = "comment_username", nullable = false, length = 12)
-    private String username;
-
     @ColumnDefault("0")
     @Column(name="comment_likes_count",nullable = false)
     private Integer likesCount;
@@ -42,7 +39,6 @@ public class Comment extends Timestamped {
     public Comment(Post post, String contents, User user) {
         this.post = post;
         this.contents = contents;
-        this.username = user.getUsername();
         this.likesCount=0;
         this.user = user;
     }

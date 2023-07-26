@@ -19,7 +19,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CommentService {
+public class CommentServiceImpl {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final CommentLikesRepository commentLikesRepository;
