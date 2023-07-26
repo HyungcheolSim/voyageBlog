@@ -68,14 +68,14 @@ public class PostController {
     //게시글 좋아요
     @PostMapping("/posts/{id}/likes")
     public ResponseEntity<ApiResponseDto> insertPostLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postServiceImpl.likePost(id, userDetails.getUser());
+        postServiceImpl.like(id, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponseDto("게시글 좋아요 성공", HttpStatus.ACCEPTED));
     }
 
     //게시글 좋아요 취소
     @DeleteMapping("/posts/{id}/likes")
     public ResponseEntity<ApiResponseDto> deletePostLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postServiceImpl.deleteLikePost(id, userDetails.getUser());
+        postServiceImpl.deleteLike(id, userDetails.getUser());
         return ResponseEntity.ok(new ApiResponseDto("좋아요 취소 완료", HttpStatus.OK));
     }
 }

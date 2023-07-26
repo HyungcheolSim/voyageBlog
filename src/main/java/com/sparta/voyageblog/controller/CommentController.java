@@ -17,7 +17,6 @@ public class CommentController {
     private final CommentServiceImpl commentServiceImpl;
 
     //댓글 등록
-
     @PostMapping("/comments")
     public ResponseEntity<ApiResponseDto> createComment(@RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -48,14 +47,14 @@ public class CommentController {
     //댓글 좋아요
     @PostMapping("/comments/{id}/likes")
     public ResponseEntity<ApiResponseDto> likeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        commentServiceImpl.likeComment(id,userDetails.getUser());
+        commentServiceImpl.like(id,userDetails.getUser());
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponseDto("좋아요 등록 완료", HttpStatus.CREATED));
     }
 
     //댓글 좋아요 취소
     @DeleteMapping("/comments/{id}/likes")     //comment likes id
     public ResponseEntity<ApiResponseDto> deleteLikeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        commentServiceImpl.deleteLikeComment(id, userDetails.getUser());
+        commentServiceImpl.deleteLike(id, userDetails.getUser());
         return ResponseEntity.ok(new ApiResponseDto("좋아요 취소 완료", HttpStatus.OK));
     }
 }

@@ -4,79 +4,60 @@ import com.sparta.voyageblog.dto.PostRequestDto;
 import com.sparta.voyageblog.dto.PostResponseDto;
 import com.sparta.voyageblog.dto.PostUpdateRequestDto;
 import com.sparta.voyageblog.entity.Post;
-import com.sparta.voyageblog.entity.PostLikes;
 import com.sparta.voyageblog.entity.User;
-import com.sparta.voyageblog.repository.PostLikesRepository;
-import com.sparta.voyageblog.repository.PostRepository;
-import com.sun.jdi.request.DuplicateRequestException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class PostService {
+public interface PostService {
 
-    private final PostRepository postRepository;
-    private final PostLikesRepository postLikesRepository;
+    /**
+     * 전체 게시글 조회
+     *
+     * @return 전체 게시글 목록
+     */
+    List<PostResponseDto> getPosts();
 
-    //전체 post 조회
-    public List<PostResponseDto> getPosts() {
-        return postRepository.findAllByOrderByCreatedAtDesc().stream().map(PostResponseDto::new).toList();
-    }
+    /**
+     * 게시글 등록
+     *
+     * @param requestDto 게시글 등록에 필요한 데이터 (title, contents)
+     * @param user       현재 로그인되어 있는 유저
+     * @return 생성된 게시글
+     */
+    PostResponseDto createPost(PostRequestDto requestDto, User user);
 
-    //Post 생성
-    public PostResponseDto createPost(PostRequestDto requestDto, User user) {
-        return new PostResponseDto(postRepository.save(new Post(requestDto, user)));
-    }
+    /**
+     * 특정 id의 게시글 조회
+     *
+     * @param id 게시글 식별 번호(post_id)
+     * @return post_id에 해당하는 게시글
+     */
+    PostResponseDto getPostById(Long id);
 
-    //특정 id의 post 조회
-    public PostResponseDto getPostById(Long id) {
-        return new PostResponseDto(findPost(id));
-    }
+    /**
+     * 게시글 수정
+     *
+     * @param post       수정할 게시글
+     * @param requestDto 수정할 데이터(title, contents)
+     * @param user       현재 로그인되어 있는 유저
+     * @return 수정된 post
+     */
+    PostResponseDto updatePost(Post post, PostUpdateRequestDto requestDto, User user);
 
-    //Post 수정
-    @Transactional
-    public PostResponseDto updatePost(Post post, PostUpdateRequestDto requestDto, User user) {
-        post.updatePost(requestDto);
-        return new PostResponseDto(post);
-    }
+    /**
+     * 게시글 삭제
+     *
+     * @param post 삭제할 게시글
+     * @param user 현재 로그인되어 있는 유저
+     */
+    void deletePost(Post post, User user);
 
-    @Transactional
-    public void deletePost(Post post, User user) {
-        postRepository.delete(post);
-    }
+    /**
+     * 특정 id를 가지는 Post 를 찾는 method, getPostById와 다른점은 리턴값이 post 객체라는 점
+     *
+     * @param id 게시글 식별 번호(post_id)
+     * @return id에 해당하는 게시글
+     */
+    Post findPost(Long id);
 
-    //특정 id를 가지는 Post 를 찾는 method, getPostById와 다른점은 리턴값이 post 객체라는 점
-    public Post findPost(Long id) {
-        return postRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 게시글은 존재하지 않습니다.")
-        );
-    }
-
-    @Transactional
-    public void likePost(Long postId, User user) {
-        Post post = findPost(postId);
-        if (!postLikesRepository.existsByPostAndUser(post, user)) {
-            PostLikes postLikes = PostLikes.builder()
-                    .post(post)
-                    .user(user)
-                    .build();
-            postLikesRepository.save(postLikes);
-            post.likesCountPlus();
-        } else {
-            throw new DuplicateRequestException("이미 좋아요를 누른 상태입니다.");
-
-        }
-    }
-
-    @Transactional
-    public void deleteLikePost(Long postId, User user) {
-        Post post = findPost(postId);
-        PostLikes postLikes = postLikesRepository.findByUserAndPost(user, post).orElseThrow(() -> new IllegalArgumentException("본인이 누른 좋아요가 아닙니다."));
-        postLikesRepository.delete(postLikes);
-        post.likesCountMinus();
-    }
 }

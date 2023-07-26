@@ -19,7 +19,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImpl implements CommentService, LikeService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final CommentLikesRepository commentLikesRepository;
@@ -71,18 +71,19 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Transactional
-    public void likeComment(Long commentId, User user) {
+    public void like(Long commentId, User user) {
         Comment comment = findComment(commentId);
         if (commentLikesRepository.existsByCommentAndUser(comment, user)) {
             throw new IllegalArgumentException("이미 좋아요를 누른 상태입니다.");
         } else {
-            commentLikesRepository.save(new CommentLikes(comment,user));
+            CommentLikes commentLikes = CommentLikes.builder().comment(comment).user(user).build();
+            commentLikesRepository.save(commentLikes);
             comment.likesCountPlus();
         }
     }
 
     @Transactional
-    public void deleteLikeComment(Long commentId, User user) {
+    public void deleteLike(Long commentId, User user) {
         Comment comment = findComment(commentId);
         Optional<CommentLikes> commentLikes = commentLikesRepository.findByUserAndComment(comment, user);
 
