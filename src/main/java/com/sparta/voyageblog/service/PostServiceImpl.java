@@ -19,6 +19,7 @@ public class PostServiceImpl implements PostService {
 
     //전체 post 조회
     @Override
+    @Transactional(readOnly = true)
     public List<PostResponseDto> getPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc().stream().map(PostResponseDto::new).toList();
     }
@@ -37,6 +38,7 @@ public class PostServiceImpl implements PostService {
 
     //특정 id의 post 조회
     @Override
+    @Transactional(readOnly = true)
     public PostResponseDto getPostById(Long id) {
         return new PostResponseDto(findPost(id));
     }

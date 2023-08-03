@@ -27,6 +27,7 @@ public class CommentServiceImpl implements CommentService {
                 .post(post)
                 .contents(requestDto.getContents())
                 .user(user)
+                .likesCount(0)
                 .build();
 
         post.getCommentList().add(comment);

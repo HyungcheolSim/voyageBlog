@@ -1,5 +1,6 @@
 package com.sparta.voyageblog.controller;
 
+import com.sparta.voyageblog.aop.Timer;
 import com.sparta.voyageblog.dto.ApiResponseDto;
 import com.sparta.voyageblog.dto.PostRequestDto;
 import com.sparta.voyageblog.dto.PostUpdateRequestDto;
@@ -31,6 +32,7 @@ public class PostController {
     }
 
     //전체 게시글 조회
+    @Timer
     @GetMapping("/posts")
     public ResponseEntity<ApiResponseDto> getPosts() {
         return ResponseEntity.ok().body(
@@ -41,6 +43,7 @@ public class PostController {
     }
 
     //게시글 등록
+    @Timer
     @PostMapping("/posts")
     public ResponseEntity<ApiResponseDto> createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -51,6 +54,7 @@ public class PostController {
     }
 
     //특정 게시글 조회
+    @Timer
     @GetMapping("/posts/{id}")
     public ResponseEntity<ApiResponseDto> getPostById(@PathVariable Long id) {
         return ResponseEntity.ok().body(
@@ -61,6 +65,7 @@ public class PostController {
     }
 
     //내가 작성한 특정 게시글 수정
+    @Timer
     @PutMapping("/posts/{id}")
     public ResponseEntity<ApiResponseDto> updatePost(@PathVariable Long id, @RequestBody PostUpdateRequestDto updateRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok().body(
@@ -72,6 +77,7 @@ public class PostController {
     }
 
     //내가 작성한 특정 게시글 삭제
+    @Timer
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<ApiResponseDto> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postService.deletePost(postService.findPost(id), userDetails.getUser());
@@ -79,6 +85,7 @@ public class PostController {
     }
 
     //게시글 좋아요
+    @Timer
     @PostMapping("/posts/{id}/likes")
     public ResponseEntity<ApiResponseDto> insertPostLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postLikeService.like(postService.findPost(id), userDetails.getUser());
@@ -86,6 +93,7 @@ public class PostController {
     }
 
     //게시글 좋아요 취소
+    @Timer
     @DeleteMapping("/posts/{id}/likes")
     public ResponseEntity<ApiResponseDto> deletePostLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postLikeService.deleteLike(postService.findPost(id), userDetails.getUser());

@@ -1,12 +1,23 @@
 package com.sparta.voyageblog.entity;
 
 import com.sparta.voyageblog.dto.PostUpdateRequestDto;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "post")
@@ -37,7 +48,8 @@ public class Post extends Timestamped {
     //@JsonIgnore
     //@JsonBackReference
     @OneToMany(mappedBy = "post")
-    private List<Comment> commentList;
+    @Builder.Default //builder 시 초기화 무시되는 것을 방지
+    private List<Comment> commentList=new ArrayList<>();
 
     public void updatePost(PostUpdateRequestDto requestDto) {
         this.title = requestDto.getTitle();

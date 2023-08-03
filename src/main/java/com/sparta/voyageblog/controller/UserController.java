@@ -1,6 +1,7 @@
 package com.sparta.voyageblog.controller;
 
 
+import com.sparta.voyageblog.aop.Timer;
 import com.sparta.voyageblog.dto.ApiResponseDto;
 import com.sparta.voyageblog.dto.SignupRequestDto;
 import com.sparta.voyageblog.service.UserService;
@@ -22,6 +23,7 @@ public class UserController {
     private final UserService userService;
 
     //회원가입
+    @Timer
     @PostMapping("/auth/signup")
     public ResponseEntity<ApiResponseDto> signUp(@RequestBody @Valid SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
