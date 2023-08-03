@@ -4,7 +4,7 @@ import com.sparta.voyageblog.entity.User;
 
 public interface LikeService {
 
-    void like(Long id, User user);
+    void like(Object o, User user);
 
-    void deleteLike(Long id, User user);
+    void deleteLike(Object o, User user);
 }

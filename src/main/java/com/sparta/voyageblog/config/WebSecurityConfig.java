@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = true) // Spring Security 지원을 가능하게 함 //실행되는 filter chain 을 확인할 수 있는 옵션 debug=true;
+@EnableWebSecurity // Spring Security 지원을 가능하게 함 //실행되는 filter chain 을 확인할 수 있는 옵션 debug=true;
 //@EnableMethodSecurity(securedEnabled = true) //@Secured 어노테이션 활성화
 public class WebSecurityConfig {
 
@@ -87,8 +87,8 @@ public class WebSecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
 
         // 필터 관리
-
-        http//.addFilterBefore(exceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class) // 1. 에러필터 2. 아디비번필터
+        //.addFilterBefore(exceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class) // 1. 에러필터 2. 아디비번필터
+        http
                 .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class) // 1. 에러필터 2. Author 필터 3. 아디비번필터
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // 1. 에러필터 2. Author 필터 3. Authen 필터 4. 아디비번필터
 

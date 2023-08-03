@@ -37,7 +37,7 @@ public class Post extends Timestamped {
     //@JsonIgnore
     //@JsonBackReference
     @OneToMany(mappedBy = "post")
-    private List<Comment> commentList = new ArrayList<>();
+    private List<Comment> commentList;
 
     public void updatePost(PostUpdateRequestDto requestDto) {
         this.title = requestDto.getTitle();

@@ -4,18 +4,31 @@ import com.sparta.voyageblog.dto.ApiResponseDto;
 import com.sparta.voyageblog.dto.PostRequestDto;
 import com.sparta.voyageblog.dto.PostUpdateRequestDto;
 import com.sparta.voyageblog.security.UserDetailsImpl;
+import com.sparta.voyageblog.service.PostLikeServiceImpl;
 import com.sparta.voyageblog.service.PostServiceImpl;
-import lombok.RequiredArgsConstructor;
+import com.sparta.voyageblog.service.factory.PostLikeServiceFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api")
 public class PostController {
-    private final PostServiceImpl postServiceImpl;
+    private final PostServiceImpl postService;
+    private final PostLikeServiceImpl postLikeService;
+
+    public PostController(PostServiceImpl postService,PostLikeServiceFactory factory){
+        this.postService=postService;
+        this.postLikeService= (PostLikeServiceImpl) factory.create();
+    }
 
     //전체 게시글 조회
     @GetMapping("/posts")
@@ -23,7 +36,7 @@ public class PostController {
         return ResponseEntity.ok().body(
                 new ApiResponseDto("특정 게시글 조회 성공",
                         HttpStatus.OK,
-                        postServiceImpl.getPosts()
+                        postService.getPosts()
                 ));
     }
 
@@ -33,7 +46,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new ApiResponseDto("게시글 등록 성공",
                         HttpStatus.CREATED,
-                        postServiceImpl.createPost(requestDto, userDetails.getUser())
+                        postService.createPost(requestDto, userDetails.getUser())
                 ));
     }
 
@@ -43,7 +56,7 @@ public class PostController {
         return ResponseEntity.ok().body(
                 new ApiResponseDto("특정 게시글 조회 성공",
                         HttpStatus.ACCEPTED,
-                        postServiceImpl.getPostById(id)
+                        postService.getPostById(id)
                 ));
     }
 
@@ -53,7 +66,7 @@ public class PostController {
         return ResponseEntity.ok().body(
                 new ApiResponseDto("게시글 수정 성공",
                         HttpStatus.ACCEPTED,
-                        postServiceImpl.updatePost(postServiceImpl.findPost(id), updateRequestDto, userDetails.getUser())
+                        postService.updatePost(postService.findPost(id), updateRequestDto, userDetails.getUser())
                 ));
 
     }
@@ -61,21 +74,21 @@ public class PostController {
     //내가 작성한 특정 게시글 삭제
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<ApiResponseDto> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postServiceImpl.deletePost(postServiceImpl.findPost(id), userDetails.getUser());
+        postService.deletePost(postService.findPost(id), userDetails.getUser());
         return ResponseEntity.ok(new ApiResponseDto("게시글 삭제 완료", HttpStatus.OK));
     }
 
     //게시글 좋아요
     @PostMapping("/posts/{id}/likes")
     public ResponseEntity<ApiResponseDto> insertPostLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postServiceImpl.like(id, userDetails.getUser());
+        postLikeService.like(postService.findPost(id), userDetails.getUser());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponseDto("게시글 좋아요 성공", HttpStatus.ACCEPTED));
     }
 
     //게시글 좋아요 취소
     @DeleteMapping("/posts/{id}/likes")
     public ResponseEntity<ApiResponseDto> deletePostLikes(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postServiceImpl.deleteLike(id, userDetails.getUser());
+        postLikeService.deleteLike(postService.findPost(id), userDetails.getUser());
         return ResponseEntity.ok(new ApiResponseDto("좋아요 취소 완료", HttpStatus.OK));
     }
 }
