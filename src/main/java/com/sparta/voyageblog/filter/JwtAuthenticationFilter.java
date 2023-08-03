@@ -1,7 +1,7 @@
 package com.sparta.voyageblog.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.voyageblog.dto.GeneralResponseDto;
+import com.sparta.voyageblog.dto.ApiResponseDto;
 import com.sparta.voyageblog.dto.LoginRequestDto;
 import com.sparta.voyageblog.entity.UserRoleEnum;
 import com.sparta.voyageblog.jwt.JwtUtil;
@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 응답 본문 추가
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        GeneralResponseDto dto = new GeneralResponseDto("로그인 성공", HttpStatus.OK);
+        ApiResponseDto dto = new ApiResponseDto("로그인 성공", HttpStatus.OK);
         ObjectMapper objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(dto));
     }
@@ -71,7 +71,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(400);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        GeneralResponseDto dto = new GeneralResponseDto("회원을 찾을 수 없습니다." , HttpStatus.BAD_REQUEST);
+        ApiResponseDto dto = new ApiResponseDto("회원을 찾을 수 없습니다." , HttpStatus.BAD_REQUEST);
         ObjectMapper objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(dto));
         //return 401 unauthorized

@@ -1,14 +1,13 @@
 package com.sparta.voyageblog.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
+@Builder
 @Table(name="post_likes")
 public class PostLikes {
     @Id
@@ -24,9 +23,4 @@ public class PostLikes {
     @JoinColumn(name="user_id")
     private User user;
 
-    @Builder
-    public PostLikes(Post post, User user) {
-        this.post = post;
-        this.user = user;
-    }
 }

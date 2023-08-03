@@ -1,6 +1,7 @@
 package com.sparta.voyageblog.config;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.voyageblog.filter.ExceptionHandlerFilter;
 import com.sparta.voyageblog.filter.JwtAuthenticationFilter;
 import com.sparta.voyageblog.filter.JwtAuthorizationFilter;
@@ -31,6 +32,7 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,6 +43,7 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
 
     @Bean
     public ExceptionHandlerFilter exceptionHandlerFilter() {
@@ -57,7 +60,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+        return new JwtAuthorizationFilter(jwtUtil, userDetailsService, objectMapper);
     }
 
     @Bean
@@ -85,7 +88,7 @@ public class WebSecurityConfig {
 
         // 필터 관리
 
-        http.addFilterBefore(exceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class) // 1. 에러필터 2. 아디비번필터
+        http//.addFilterBefore(exceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class) // 1. 에러필터 2. 아디비번필터
                 .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class) // 1. 에러필터 2. Author 필터 3. 아디비번필터
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // 1. 에러필터 2. Author 필터 3. Authen 필터 4. 아디비번필터
 

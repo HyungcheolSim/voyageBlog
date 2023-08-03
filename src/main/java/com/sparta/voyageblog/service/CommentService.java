@@ -2,61 +2,42 @@ package com.sparta.voyageblog.service;
 
 import com.sparta.voyageblog.dto.CommentRequestDto;
 import com.sparta.voyageblog.dto.CommentResponseDto;
-import com.sparta.voyageblog.entity.*;
-import com.sparta.voyageblog.repository.CommentRepository;
-import com.sparta.voyageblog.repository.PostRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.sparta.voyageblog.entity.Comment;
+import com.sparta.voyageblog.entity.User;
 
-@Slf4j
-@Service
-@RequiredArgsConstructor
-public class CommentService {
-    private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
+public interface CommentService {
+    /**
+     * 댓글 등록
+     *
+     * @param requestDto 댓글 등록에 필요한 데이터 (title, contents)
+     * @param user       현재 로그인되어 있는 유저
+     * @return 생성된 댓글
+     */
+    CommentResponseDto createComment(CommentRequestDto requestDto, User user);
 
-    @Transactional
-    public CommentResponseDto createComment(CommentRequestDto requestDto, User user) {
+    /**
+     * 댓글 수정
+     *
+     * @param comment       수정할 댓글
+     * @param commentRequestDto 수정할 데이터(postId, contents)
+     * @param user       현재 로그인되어 있는 유저
+     * @return 수정된 post
+     */
+    CommentResponseDto updateComment(Comment comment, CommentRequestDto commentRequestDto, User user);
 
-        Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        Comment comment = Comment.builder()
-                .post(post)
-                .contents(requestDto.getContents())
-                .user(user)
-                .build();
-        post.addCommentList(comment);
+    /**
+     * 댓글 삭제
+     *
+     * @param comment 삭제할 댓글
+     * @param user 현재 로그인되어 있는 유저
+     */
+    void deleteComment(Comment comment, User user);
 
-        log.info("댓글 " + comment.getContents() + " 등록");
-        return new CommentResponseDto(commentRepository.save(comment));
-    }
-
-    @Transactional
-    public CommentResponseDto updateComment(CommentRequestDto commentRequestDto, User user) {
-        Post post = postRepository.findById(commentRequestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        Comment comment = commentRepository.findByPost_IdAndId(commentRequestDto.getPostId(), commentRequestDto.getCommentId()).orElseThrow(() -> new IllegalArgumentException("댓글이나 게시글이 존재하지 않습니다."));
-        if (!(comment.getUser().getId().equals(user.getId()) || user.getRole().equals(UserRoleEnum.ADMIN))) { //comment 내 user의 id와 현재 로그인한 user의 id 비교해서 다르면 예외
-            throw new IllegalArgumentException("이 댓글을 수정할 권한이 없습니다.");
-        }
-        comment.updateComment(commentRequestDto.getContents());
-        log.info("댓글 수정 실행");
-        //comment list 에서의 수정도 있어야하겠네..
-        //해당 post 의 comment list 에서 commentId가 일치하는 comment 를 찾아서 수정->stream 잘쓰고싶다..
-        for (Comment com : post.getCommentList()) {
-            if (com.getId().equals(comment.getId())) {
-                com.updateComment(commentRequestDto.getContents());
-            }
-        }
-        return new CommentResponseDto(comment);
-    }
-
-    @Transactional
-    public void deleteComment(CommentRequestDto commentRequestDto, User user) {
-        Comment comment = commentRepository.findByPost_IdAndId(commentRequestDto.getPostId(), commentRequestDto.getCommentId()).orElseThrow(() -> new IllegalArgumentException("댓글이나 게시글이 존재하지 않습니다."));
-        if (!(comment.getUser().getId().equals(user.getId()) || user.getRole().equals(UserRoleEnum.ADMIN))) {
-            throw new IllegalArgumentException("이 댓글을 삭제할 권한이 없습니다.");
-        }
-        commentRepository.delete(comment);
-    }
+    /**
+     * 특정 id를 가지는 댓글 조회
+     *
+     * @param id 댓글 식별 번호(post_id)
+     * @return id에 해당하는 댓글
+     */
+    Comment findComment(Long id);
 }

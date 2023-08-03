@@ -1,23 +1,18 @@
 package com.sparta.voyageblog.controller;
 
 
-import com.sparta.voyageblog.dto.GeneralResponseDto;
+import com.sparta.voyageblog.dto.ApiResponseDto;
 import com.sparta.voyageblog.dto.SignupRequestDto;
-import com.sparta.voyageblog.exception.NotValidInputException;
 import com.sparta.voyageblog.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -28,22 +23,8 @@ public class UserController {
 
     //회원가입
     @PostMapping("/auth/signup")
-    public ResponseEntity<GeneralResponseDto> signUp(@RequestBody @Valid SignupRequestDto signupRequestDto, BindingResult bindingResult) {
-        // Validation 예외처리
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-
-        if(fieldErrors.size() > 0) {
-            StringBuilder message=new StringBuilder();
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
-                message.append(fieldError.getField())
-                        .append(" 필드 ")
-                        .append(fieldError.getDefaultMessage());
-
-            }
-            throw new NotValidInputException(String.valueOf(message));
-        }
+    public ResponseEntity<ApiResponseDto> signUp(@RequestBody @Valid SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new GeneralResponseDto("회원가입 완료", HttpStatus.CREATED));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponseDto("회원가입 완료", HttpStatus.CREATED));
     }
 }
