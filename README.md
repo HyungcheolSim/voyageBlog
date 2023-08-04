@@ -1,4 +1,5 @@
 # voyageBlog
+
 spring 개인과제 나만의 블로그 만들기
 
 프로젝트 설명 & API 명세서 & 개발 및 리팩토링 과정
@@ -6,16 +7,39 @@ spring 개인과제 나만의 블로그 만들기
 https://boundless-pudding-4e9.notion.site/189b7be021e5442993234dcbb0d185e3?pvs=4
 
 ----------------------
+
 ## 리팩토링
-- [ ]  cascade →post update, delete에 적용
-- [ ]  로그 디테일하게 남기기
-- [ ]  access token
-- [ ]  refresh token
-- [ ]  swagger 적용
-- [ ]  readme 수정
+
+- [x]  dto 필드 validation 설정해주기+예외처리 같이
+- [x]  기능별로 커밋 잘 남기기
+- [x]  readme 수정
+- [x]  aop 적용
+- [x]  exceptionfilter 제거
+- [x]  lv4 과제 해설 비교
+- [x]  post like comment like 합치기
+
+---
+
+- 0803 REFACTORING
+    - [x]  postlike 와 commentlike 를 likeservice로 분리
+    - [x]  factory를 이용한 생성
+    - [x]  동작 테스트
+    - [x]  AOP로 api 수행 시간 측정
+    - [x]  QueryDSL 적용-
+    - [x]  페이징, 정렬 기능을 추가
+
+
+- 0804 REFACTORING
+    - [ ]  Controller 테스트코드 작성
+    - [ ]  Service 테스트코드 작성
+    - [ ]  Repository 테스트코드 작성
+    - [ ]  aws s3 이미지 업로드 구현
+    - [ ]  ec2로 .jar 파일 배포
+
 ------------------------------
 
 ## API 명세서 - swagger 적용 예정
+
 https://documenter.getpostman.com/view/27930567/2s93z86NDq
 
 <details>
