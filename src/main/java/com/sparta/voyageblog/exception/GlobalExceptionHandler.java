@@ -1,6 +1,7 @@
 package com.sparta.voyageblog.exception;
 
 import com.sparta.voyageblog.dto.ApiResponseDto;
+import com.sun.jdi.request.DuplicateRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.concurrent.RejectedExecutionException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({IllegalArgumentException.class, RejectedExecutionException.class, NotValidInputException.class})
+    @ExceptionHandler({IllegalArgumentException.class, RejectedExecutionException.class, NotValidInputException.class,DuplicateRequestException.class})
     public ResponseEntity<ApiResponseDto> rejectedExecutionExceptionHandler(Exception ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto(ex.getLocalizedMessage(), HttpStatus.BAD_REQUEST));
     }
@@ -30,6 +31,4 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto(e.getBindingResult().getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST));
     }
-
-
 }
